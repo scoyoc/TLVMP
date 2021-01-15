@@ -33,4 +33,31 @@ check()
 
 # Import existing functions
 source("./exec/import_wxdat.R")
+use_r("import_file")
+use_r("get_data")
+use_r("get_details")
 use_r("import_wxdat")
+rm(list = ls())
+document()
+
+# Add packages to DESCRIPTION
+sessionInfo()
+use_package("stringr", "Imports")
+use_package("tibble", "Imports")
+use_package("tidyr", "Imports")
+use_package("dplyr", "Imports")
+use_package("lubridate", "Imports")
+use_package("readr", "Suggests")
+use_package("stringi", "Suggests")
+use_package("janitor", "Suggests")
+document()
+check()
+load_all()
+
+#-- Delete NAMESPACE file and man directory
+file.remove("NAMESPACE")
+unlink("man", recursive = T)
+#-- Create new NAMESPACE file and man directory
+document()
+check()
+load_all()
