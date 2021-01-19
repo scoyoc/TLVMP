@@ -1,25 +1,30 @@
 Package: dataProcessor
-Title: What the Package Does (One Line, Title Case)
+Title: Import Data into the LTVMP Database
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Matthew",
+           family = "Van Scoyoc",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+           email = "matthew_vanscoyoc@nps.gov",
+           comment = c(ORCID = "0000-0001-6821-4476"))
+Description: This package standardizes raw data collected in the field and 
+    uploads them to the LTVMP database. Plant and ground cover data are 
+    collected in the field using paper datasheets, then transcribed into Excel 
+    workbooks. Onset data loggers collect temperature, relative humidity, and 
+    precipitation data. These data are exported to comma delimited files 
+    (*.csv) using the HOBOware application from Onset. This package imports 
+    those workbooks and *.csv files into R, than standardizes the data before 
+    importing them into the database.
+Depends: R (>= 4.0.1)
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports: 
-    stringr,
-    tibble,
-    tidyr,
-    dplyr,
-    lubridate
+    dplyr (>= 1.0.2),
+    lubridate (>= 1.7.9),
+    stringr (>= 1.4.0),
+    tibble (>= 3.0.4),
+    tidyr (>= 1.1.2)
 Suggests: 
-    readr,
-    stringi,
-    janitor

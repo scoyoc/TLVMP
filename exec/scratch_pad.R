@@ -1,9 +1,11 @@
+# Imports:
+library("dplyr")
+library("lubridate")
 library("stringr")
 library("tibble")
 library("tidyr")
-library("dplyr")
+# Suggests:
 library("readr")
-library("lubridate")
 library("stringi")
 library("janitor")
 
