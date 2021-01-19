@@ -1,3 +1,4 @@
+library("tidyverse")
 # Imports:
 library("dplyr")
 library("lubridate")
@@ -44,10 +45,9 @@ my_file = import_file(this_file = file.list[12], datestamp_loc = 1, plotid_loc =
 
 file.list <- list.files(path = "./inst/raw_data", pattern = ".csv",
                         full.names = T, recursive = F)
-my_file <- import_file(file.list[1])
-get_product(my_file)
-my_data <- get_data(my_file)
-my_details <- get_details(my_file, my_data)
+my_file <- import_file(file.list[1]); my_file
+my_data <- get_data(my_file); my_data
+my_details <- get_details(my_file, my_data); my_details
 import_wxdat(file.list[1])
 
 

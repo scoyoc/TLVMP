@@ -1,32 +1,60 @@
-#' Imports *.csv file produced by Onset HOBOware
+#' Import a csv file produced by Onset HOBOware into R
 #'
-#' This function produces a list that will be used in get_data() and get_details().
+#' This function extracts data from the file name and comma delimited (csv)
+#'    file produced by HOBOware so the data can be imported into R. This
+#'    function produces a list that will be used in subsequent functions
+#'    including \code{get_data} and \code{get_details}.
 #'
-#' @param this_file a character string with the file name, can include directory path.
-#' @param datestamp_loc a number for the location of the date stamp (an index). Default is 1.
-#' @param plotid_loc a number for the location of the Plot ID (an index). Default is 2.
-#' @param plotid_s a number for the beginning of the Plot ID (an index). Default is 1.
-#' @param plotid_e a number for the end of the Plot ID (an index). Default is 3.
+#' @param this_file A character string of the file name. This can include full
+#'     directory path.
+#' @param datestamp_loc A number for the location of the date stamp in the file
+#'     name, an index. Default is 1.
+#' @param plotid_loc A number for the location of the Plot ID in the file name,
+#'     an index. Default is 2.
+#' @param plotid_s A number for the beginning of the Plot ID in the file name,
+#'     an index. Default is 1.
+#' @param plotid_e A number for the end of the Plot ID in the file name, an
+#'     index. Default is 3.
 #'
-#' @return list
 #' @details
-#' This function finds variables in the file name and the text file to properly
-#' import the *.csv into R.
+#' This function extracts variables from the file name and the raw data so the
+#'     file can be imported into R. It returns a list with two components. The
+#'     first component is a vector containing information about the file. The
+#'     second component is a data frame containing the raw data and the
+#'     metadata for the sampling event.
 #'
-#' It returns a list with two components.
+#' @return
+#' This function returns a list with two components.
 #'
-#' The first component is named file_info.
-#' It is a vector that contains the file name, the date stamp on the file name,
-#' the plot ID from the file name, and the number of rows to skip to properly
-#' import the data.
+#' \describe{
+#'    \item{\strong{file_info}}{This component is a vector that contains the file name,
+#'         the date stamp, plot ID, the number of lines to skip to properly
+#'         import the data, and the number of columns of data in the raw file.
+#'         Varibles listed below:
+#'         \itemize{
+#'             \item filename: The base name of the file being processed.
+#'             \item datestamp: A date stamp. stripped from the file name.
+#'             \item plotid: The plot identification number. Stripped from
+#'                 the file name.
+#'             \item skip:The number of lines to skip to read in the file
+#'                 correctly.
+#'             \item col_n: The number of columns in the raw data file.}}
+#'    \item{\strong{raw_file}}{This component is a data frame containing the raw data
+#'         and the "Details" column produced by HOBOware.}
+#' }
 #'
-#' The second component is is a data frame consisting of all the raw data and
-#' metadata.
+#' @seealso \code{\link{get_data}} to extract the data and
+#'     \code{\link{get_details}} to extract the metadata.
 #'
 #' @export
+#'
 #' @examples
-#' file.list <- list.files(path = "./inst/raw_data", pattern = ".csv", full.names = T, recursive = F)
+#' \dontrun{
+#' library("dataProcessor")
+#' file.list <- list.files(path = "./inst/raw_data", pattern = ".csv",
+#'                         full.names = TRUE, recursive = FALSE)
 #' import_file(file.list[1])
+#' }
 #'
 import_file <- function(this_file, datestamp_loc = 1, plotid_loc = 2,
                         plotid_s = 1, plotid_e = 3){
@@ -43,7 +71,7 @@ import_file <- function(this_file, datestamp_loc = 1, plotid_loc = 2,
     plotid = toupper(stringr::str_sub(strsplit(basename(this_file), "_")[[1]][plotid_loc],
                                       plotid_s, plotid_e)),
     # Determine if the first row is to be skipped
-    skip = ifelse(str_detect(suppressWarnings(
+    skip = ifelse(stringr::str_detect(suppressWarnings(
       read.table(this_file, sep = ",", header = F, nrows = 1, fill = T))['V1'],
       "Plot"),
       2, 1)

@@ -2,31 +2,72 @@
 % Please edit documentation in R/get_details.R
 \name{get_details}
 \alias{get_details}
-\title{Extract sampling details from import_file() output}
+\title{Extract metadata from csv file produced by Onset HOBOware}
 \usage{
 get_details(my_file, my_dat)
 }
 \arguments{
-\item{my_file}{a list produced from import_file()}
+\item{my_file}{An \code{import_file} object.}
 
-\item{my_dat}{a data frame produced from get_data()}
+\item{my_dat}{The data frame produced from \code{get_data}.}
 }
 \value{
-tibble
+This function returns a \code{\link[tibble:tibble]{tibble}} of standardized
+data. The variables produced by this function include:
+
+\describe{
+\item{\strong{FileName}}{The name of the file the data came from.}
+\item{\strong{Details}}{This variable will varry with the data contained
+in the "Details" colum of the original file. Calculated variables
+listed below.
+\itemize{
+\item Import Date: A character string of the date the data were
+processed useing lubridate::today().
+\item Plot ID: The unique plot identification number (e.g., A03
+or I06).
+\item Element: The element the data represent. TEMP is
+temperature, RH is relative humidity, and PRCP is
+precipitation.
+\item Units: The unit of measurement. Temperature is measured in
+F or C, relative humidity is measured in percent, and
+precipitation is measured in tips of the tipping bucket, or
+events.
+\item DateTime (min): The minimum date-time stamp in the data.
+\item DateTime (max): The maximum date-time stamp in the data.
+\item Records (n): The number of records of data.
+\item ConvertFtoC: Logical. Were the temperature data converted
+from F to C? Yes or No.
+}}
+\item{\strong{Value}}{The value the variable in Details.}
+}
 }
 \description{
-Extract sampling details from import_file() output
+This function extracts metadata from the 'Details' column and raw data
+of a comma delimited (csv) file produced by HOBOware. This function uses
+the list, or object, produced from \code{\link{import_file}}.
 }
 \details{
-This function produces a data frame of details about the sampling event.
-Some of these details are scraped from the Details column of the *.csv produced by HOBOware.
-Other's are scraped from the file name, and some are calculated form the data.
+This function produces a data frame of metadata about the sampling event.
+Some of the values details are extracted from the "Details" column of the csv
+file, some are scraped from the file name, and others are calculated form the
+data.
 }
+\section{Calculated variables}{
+
+}
+
 \examples{
-library(dataProcessor)
-file.list <- list.files(path = "./inst/raw_data", pattern = ".csv", full.names = T, recursive = F)
+\dontrun{
+library("dataProcessor")
+file.list <- list.files(path = "./inst/raw_data", pattern = ".csv",
+                        full.names = TRUE, recursive = FALSE)
 my_file <- import_file(file.list[1])
 my_data <- get_data(my_file)
 get_details(my_file, my_data)
+}
 
+}
+\seealso{
+\code{\link{import_file}} to import a csv produced by HOBOware and
+\\code{\link{get_data}} to extract the data.
 }
