@@ -127,7 +127,7 @@ import_file <- function(this_file, datestamp_loc = 1, plotid_loc = 2,
                  col.names = c("RID", "DateTime", "Temp", "RH",
                                "Detatched", "Attached", "Connected",
                                "EndFile", "Details","Units"))) %>%
-      na.omit() %>%
+      tidyr::drop_na() %>%
       as_tibble()
 
   } else(message(paste0("Something is wrong. Check file: ", basename(this_file),

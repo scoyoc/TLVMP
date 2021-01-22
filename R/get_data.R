@@ -34,8 +34,8 @@
 #' @examples
 #' \dontrun{
 #' library("dataProcessor")
-#' file.list <- list.files(path = "./inst/raw_data", pattern = ".csv",
-#'                         full.names = TRUE, recursive = FALSE)
+#' file_list <- list.files(path = system.file("extdata", package = "dataProcessor"),
+#'                         pattern = ".csv", full.names = TRUE, recursive = FALSE)
 #' my_file <- import_file(file.list[1])
 #' get_data(my_file)
 #' }
@@ -56,8 +56,11 @@ get_data <- function(my_file){
                     'FileName' = basename(my_file$file_info$filename),
                     'PlotID' = my_file$file_info$plotid,
                     'Element' = my_logger$Element,
-                    'RID' = paste(as.numeric(DateTime), PlotID, Element, sep = "."),
-                    'Value' = ifelse(Element == "TEMP" && str_detect(units, "F"),
+                    'RID' = paste(as.numeric(DateTime), PlotID, Element,
+                                  sep = "."),
+                    'Value' = ifelse(Element == "TEMP" &&
+                                       stringr::str_detect(my_logger$Units,
+                                                           "F"),
                                      Value - 32 * 5/9,
                                      Value)) %>%
       dplyr::select('RID', 'FileName', 'PlotID', 'DateTime', 'Element', 'Value')
@@ -89,8 +92,8 @@ get_product <- function(my_file){
   # raw file. It uses the list produced from import_file().
   my_logger = my_file$raw_file %>%
     dplyr::select('Details') %>%
-    tidyr::separate('Details', into = c("Var", "Product"), sep = ":", remove = T,
-                    extra = "merge", fill = "right") %>%
+    tidyr::separate('Details', into = c("Var", "Product"), sep = ":",
+                    remove = T, extra = "merge", fill = "right") %>%
     dplyr::filter(Var == "Product") %>%
     dplyr::distinct() %>%
     dplyr::mutate('Product' = trimws(Product, 'left'),

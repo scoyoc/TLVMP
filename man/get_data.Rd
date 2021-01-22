@@ -37,8 +37,8 @@ standardizes the data structure into six columns.
 \examples{
 \dontrun{
 library("dataProcessor")
-file.list <- list.files(path = "./inst/raw_data", pattern = ".csv",
-                        full.names = TRUE, recursive = FALSE)
+file_list <- list.files(path = system.file("extdata", package = "dataProcessor"),
+                        pattern = ".csv", full.names = TRUE, recursive = FALSE)
 my_file <- import_file(file.list[1])
 get_data(my_file)
 }

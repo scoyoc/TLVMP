@@ -21,14 +21,18 @@
 #' This function returns a list with three components.
 #'
 #' \describe{
-#'     \item{\strong{file_info}}{This component is a vector that contains the file name,
-#'         the date stamp, plot ID, the number of lines to skip to properly
-#'         import the data, and the number of columns of data in the raw file.
-#'         This comonent is a component of \code{\link{import_file}}.}
+#'     \item{\strong{file_info}}{This component is a vector that contains the
+#'         file name, the date stamp, plot ID, the number of lines to skip to
+#'         properly import the data, and the number of columns of data in the
+#'         raw file. This comonent is a component of \code{\link{import_file}}.}
 #'     \item{\strong{details}}{This component is a data frame of metadata. See
 #'         \code{\link{get_details}} for more details.}
-#'     \item{\strong{data}}{This component is a data frame containing the raw data. See
-#'         \code{\link{get_data}} for more details.}
+#'     \item{\strong{data}}{This component is a data frame containing the
+#'         standardized form of the raw data. See \code{\link{get_data}} for
+#'         more details.}
+#'     \item{\strong{raw_file}}{The raw, unprocessed or standardized file that
+#'         was loaded into R using \code{\link{import_file}}. See
+#'         \code{\link{import_file}} for more details.}
 #' }
 #'
 #' @seealso \code{\link{import_file}} to import a csv produced by HOBOware,
@@ -56,5 +60,6 @@ import_wxdat <- function(this_file, ...){
   # Return list of objects
   return(list('file_info' = my_file$file_info,
               'details' = my_details,
-              "data" = my_data))
+              'data' = my_data,
+              'raw_file' = my_file$raw_file))
 }

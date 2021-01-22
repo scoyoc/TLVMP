@@ -4,12 +4,12 @@
 \alias{get_details}
 \title{Extract metadata from csv file produced by Onset HOBOware}
 \usage{
-get_details(my_file, my_dat)
+get_details(my_file, my_data)
 }
 \arguments{
 \item{my_file}{An \code{import_file} object.}
 
-\item{my_dat}{The data frame produced from \code{get_data}.}
+\item{my_data}{The data frame produced from \code{get_data}.}
 }
 \value{
 This function returns a \code{\link[tibble:tibble]{tibble}} of standardized
