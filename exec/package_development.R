@@ -32,12 +32,6 @@ devtools::document()
 devtools::check()
 devtools::load_all()
 
-# Import existing functions
-source("./exec/import_wxdat.R")
-devtools::use_r("import_file")
-devtools::use_r("get_data")
-devtools::use_r("get_details")
-devtools::use_r("import_wxdat")
 rm(list = ls())
 devtools::document()
 
