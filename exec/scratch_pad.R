@@ -8,3 +8,4 @@ devtools::load_all()
 
 # Testing weather data functions
 library("raindancer")
+

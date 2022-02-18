@@ -15,7 +15,8 @@
 #' loggers.
 
 # Load packages
-# install.packages("devtools", "roxygene", "testthat", "tidyverse", "fs", "knirt")
+# install.packages("devtools", "roxygene", "testthat", "tidyverse", "fs",
+#                  "knirt")
 library("devtools")
 # Create package
 create_package("~/R/dataProcessor")
