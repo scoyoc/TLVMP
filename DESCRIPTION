@@ -1,6 +1,6 @@
 Package: dataprocessR
 Title: Export Data into the SEUG LTVMP Database
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: 
     person(given = "Matthew",
            family = "Van Scoyoc",
