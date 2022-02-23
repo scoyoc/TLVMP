@@ -9,7 +9,8 @@ import_hobo_to_db(
   my_db,
   import_table,
   raw_data_table,
-  data_table,
+  prcp_data_table,
+  temp_rh_data_table,
   details_table,
   verbose = TRUE
 )
@@ -24,7 +25,11 @@ file.}
 
 \item{raw_data_table}{A character string of the name of the raw data table.}
 
-\item{data_table}{A character string of the name of the processed data table.}
+\item{prcp_data_table}{A character string of the name of the processed
+precipitation data table.}
+
+\item{temp_rh_data_table}{A character string of the name of the processed
+temperature and relative humidity data table.}
 
 \item{details_table}{A character string of the name of the logger details
 table.}

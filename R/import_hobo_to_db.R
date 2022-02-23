@@ -8,7 +8,10 @@
 #' @param my_db A connected database from \code{\link{RODBC}}.
 #' @param import_table A character string of the name of the import log table.
 #' @param raw_data_table A character string of the name of the raw data table.
-#' @param data_table A character string of the name of the processed data table.
+#' @param prcp_data_table A character string of the name of the processed
+#'     precipitation data table.
+#' @param temp_rh_data_table A character string of the name of the processed
+#'     temperature and relative humidity data table.
 #' @param details_table A character string of the name of the logger details
 #'     table.
 #' @param verbose Logical. Default is TRUE. If FALSE, messages are suppressed.
@@ -37,10 +40,10 @@
 #'                   details_table = "tbl_details")
 #' }
 import_hobo_to_db <- function(my_file, my_db, import_table, raw_data_table,
-                              data_table, details_table, verbose = TRUE){
+                              prcp_data_table, temp_rh_data_table,
+                              details_table, verbose = TRUE){
 
   if(verbose == TRUE) message(glue::glue("Processing {basename(my_file)}"))
-
   #-- Process hobo file --
   dat <- suppressMessages(
     raindancer::import_wxdat(my_file) |>
@@ -79,7 +82,7 @@ import_hobo_to_db <- function(my_file, my_db, import_table, raw_data_table,
                      append = TRUE, rownames = FALSE, colnames = FALSE,
                      addPK = TRUE, fast = TRUE)
       )
-  )
+    )
 
   #-- Raw Data --
   # Prep data
@@ -91,42 +94,44 @@ import_hobo_to_db <- function(my_file, my_db, import_table, raw_data_table,
     RODBC::sqlSave(my_db, data_raw, tablename = raw_data_table,
                    append = FALSE, rownames = FALSE, colnames = FALSE,
                    safer = FALSE, addPK = TRUE, fast = TRUE)
-  } else(
-    RODBC::sqlSave(my_db, data_raw, tablename = raw_data_table,
-                   append = TRUE, rownames = FALSE, colnames = FALSE,
-                   addPK = TRUE, fast = TRUE)
-  )
+    } else(
+      RODBC::sqlSave(my_db, data_raw, tablename = raw_data_table,
+                     append = TRUE, rownames = FALSE, colnames = FALSE,
+                     addPK = TRUE, fast = TRUE)
+      )
 
   #-- Data --
   # Prep data
+  if(verbose == TRUE) message("- Writing processed data to database")
   if(file_info$Element == "PRCP"){
     wxdat <- dat$data |>
-      tidyr::gather(key = "Metric", value = "Value",
-                    -c(PlotID, DateTime, Element)) |>
-      dplyr::arrange(DateTime) |>
       dplyr::mutate("DateTime" = as.character(DateTime,
-                                              format = "%Y-%m-%d %H:%M:%S"),
-                    "Value" = as.character(Value)) |>
-      dplyr::select(PlotID, DateTime, Element, Metric, Value)
-  } else (
-    wxdat <- dat$data |>
-      tidyr::gather(key = "Metric", value = "Value",
-                    -c(PlotID, Date, Element)) |>
-      dplyr::arrange(Date) |>
-      dplyr::rename("DateTime" = Date) |>
-      dplyr::mutate("DateTime" = as.character(DateTime))
-  )
-  # Export to DB
-  if(verbose == TRUE) message("- Writing processed data to database")
-  if(!data_table %in% RODBC::sqlTables(my_db)$TABLE_NAME){
-    RODBC::sqlSave(my_db, wxdat, tablename = data_table,
-                   append = FALSE, rownames = FALSE, colnames = FALSE,
-                   safer = FALSE, addPK = TRUE, fast = TRUE)
-  } else(
-    RODBC::sqlSave(my_db, wxdat, tablename = data_table,
-                   append = TRUE, rownames = FALSE, colnames = FALSE,
-                   addPK = TRUE, fast = TRUE)
-  )
+                                              format = "%Y-%m-%d %H:%M:%S"))
+    # Export to DB
+    if(!prcp_data_table %in% RODBC::sqlTables(my_db)$TABLE_NAME){
+      RODBC::sqlSave(my_db, wxdat, tablename = prcp_data_table,
+                     append = FALSE, rownames = FALSE, colnames = FALSE,
+                     safer = FALSE, addPK = TRUE, fast = TRUE)
+      } else({
+        RODBC::sqlSave(my_db, wxdat, tablename = prcp_data_table,
+                     append = TRUE, rownames = FALSE, colnames = FALSE,
+                     addPK = TRUE, fast = TRUE)
+        })
+    } else({
+      wxdat <- dat$data |>
+        dplyr::mutate("Date" = as.character(Date,
+                                            format = "%Y-%m-%d %H:%M:%S"))
+      # Export to DB
+      if(!temp_rh_data_table %in% RODBC::sqlTables(my_db)$TABLE_NAME){
+        RODBC::sqlSave(my_db, wxdat, tablename = temp_rh_data_table,
+                       append = FALSE, rownames = FALSE, colnames = FALSE,
+                       safer = FALSE, addPK = TRUE, fast = TRUE)
+        } else({
+          RODBC::sqlSave(my_db, wxdat, tablename = temp_rh_data_table,
+                       append = TRUE, rownames = FALSE, colnames = FALSE,
+                       addPK = TRUE, fast = TRUE)
+          })
+  })
 
   #-- Details --
   # Export to DB
@@ -135,10 +140,9 @@ import_hobo_to_db <- function(my_file, my_db, import_table, raw_data_table,
     RODBC::sqlSave(my_db, dat$details, tablename = details_table,
                    append = FALSE, rownames = FALSE, colnames = FALSE,
                    safer = FALSE, addPK = TRUE, fast = TRUE)
-  } else(
-    RODBC::sqlSave(my_db, dat$details, tablename = details_table,
-                   append = TRUE, rownames = FALSE, colnames = FALSE,
-                   addPK = TRUE, fast = TRUE)
-  )
-
-}
+    } else(
+      RODBC::sqlSave(my_db, dat$details, tablename = details_table,
+                     append = TRUE, rownames = FALSE, colnames = FALSE,
+                     addPK = TRUE, fast = TRUE)
+    )
+  }
