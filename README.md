@@ -5,6 +5,9 @@ Plant and ground cover data are collected in the field using paper datasheets, t
 Onset data loggers collect temperature, relative humidity, and precipitation data that are exported to comma delimited files (*.csv) using the HOBOware application from Onset. 
 This package imports the workbooks and *.csv files into R, than standardizes the data before exporting them to the database.
 
+Currently, the weather data process is developed for the *.csv files from Hoboware.
+Excel workbook processing is under development.
+
 Version: 0.0.1
 
 Depends: R (>= 4.0)
