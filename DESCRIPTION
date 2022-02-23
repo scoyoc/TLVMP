@@ -1,4 +1,4 @@
-Package: dataProcessor
+Package: dataprocessR
 Title: Export Data into the SEUG LTVMP Database
 Version: 0.0.0.9000
 Authors@R: 
@@ -25,6 +25,7 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Imports: 
     dplyr (>= 1.0.2),
+    glue (>= 1.6.1),
     lubridate (>= 1.7.9),
     raindancer (>= 0.0.1),
     RODBC (>= 1.3),
