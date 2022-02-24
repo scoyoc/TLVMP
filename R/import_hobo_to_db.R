@@ -56,9 +56,7 @@ import_hobo_to_db <- function(my_file, my_db, import_table, raw_data_table,
   #-- Import Record --
   # Prep data
   file_info <- dat$file_info |>
-    dplyr::select(filename, plotid, Element) |>
-    dplyr::rename("FileName" = filename,
-                  "PlotID" = plotid)
+    dplyr::select(FileName, PlotID, Element)
   details <- dat$details |>
     dplyr::filter(Details %in% c("Product", "Serial Number", "Launch Name",
                                  "Deployment Number", "Launch Time",
