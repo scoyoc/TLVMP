@@ -56,9 +56,7 @@ import_hobo_to_db <- function(my_file, my_db, import_table, raw_data_table,
   #-- Import Record --
   # Prep data
   file_info <- dat$file_info |>
-    dplyr::select(filename, plotid, Element) |>
-    dplyr::rename("FileName" = filename,
-                  "PlotID" = plotid)
+    dplyr::select(FileName, PlotID, Element)
   details <- dat$details |>
     dplyr::filter(Details %in% c("Product", "Serial Number", "Launch Name",
                                  "Deployment Number", "Launch Time",
@@ -108,7 +106,8 @@ import_hobo_to_db <- function(my_file, my_db, import_table, raw_data_table,
   if(verbose == TRUE) message("- Writing processed data to database")
   if(file_info$Element == "PRCP"){
     prcp_dat <- dat$data |>
-      dplyr::mutate("DateTime" = as.character(DateTime,
+      dplyr::mutate("PlotID" = file_info$PlotID,
+                    "DateTime" = as.character(DateTime,
                                               format = "%Y-%m-%d %H:%M:%S"))
     # Export to DB
     if(!prcp_data_table %in% RODBC::sqlTables(my_db)$TABLE_NAME){
@@ -122,7 +121,8 @@ import_hobo_to_db <- function(my_file, my_db, import_table, raw_data_table,
         })
     } else({
       tr_dat <- dat$data |>
-        dplyr::mutate("Date" = as.character(Date,
+        dplyr::mutate("PlotID" = file_info$PlotID,
+                      "Date" = as.character(Date,
                                             format = "%Y-%m-%d %H:%M:%S"))
       # Export to DB
       if(!temp_rh_data_table %in% RODBC::sqlTables(my_db)$TABLE_NAME){
