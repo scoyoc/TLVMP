@@ -22,22 +22,25 @@
 #'
 #' @examples
 #' \dontrun{
+#' library("dataprocessR")
+#'
 #' # Connect to DB
-#' # RODBC::odbcClose(my_db); rm(my_db)
-#' my_db <- RODBC::odbcConnectAccess2007("VegTest.accdb")
+#' my_db <- RODBC::odbcConnectAccess2007("C:/path/to/database.accdb")
 #'
 #' # List files
-#' my_dir <- "L:/LTVMP/Data/Weather Data/2008"
+#' my_dir <- "C:/path/to/data"
 #' file_list <- list.files(my_dir, pattern = ".csv", full.names = TRUE,
 #'                         recursive = FALSE)
-#' # Select file and process data
-#' my_file <- file_list[7]
+#' # Select file
+#' my_file <- file_list[10]
 #'
+#' # Process file and save to database
 #' import_hobo_to_db(my_file = my_file, my_db = my_db,
-#'                   import_table = "tbl_import_table",
+#'                   import_table = "tbl_import_log",
 #'                   raw_data_table = "tbl_raw_data",
-#'                   data_table = "tbl_data",
-#'                   details_table = "tbl_details")
+#'                   prcp_data_table = "tbl_prcp_data",
+#'                   temp_rh_data_table = "tbl_temp_rh_data",
+#'                   details_table = "tbl_logger_details")
 #' }
 import_hobo_to_db <- function(my_file, my_db, import_table, raw_data_table,
                               prcp_data_table, temp_rh_data_table,
@@ -104,30 +107,30 @@ import_hobo_to_db <- function(my_file, my_db, import_table, raw_data_table,
   # Prep data
   if(verbose == TRUE) message("- Writing processed data to database")
   if(file_info$Element == "PRCP"){
-    wxdat <- dat$data |>
+    prcp_dat <- dat$data |>
       dplyr::mutate("DateTime" = as.character(DateTime,
                                               format = "%Y-%m-%d %H:%M:%S"))
     # Export to DB
     if(!prcp_data_table %in% RODBC::sqlTables(my_db)$TABLE_NAME){
-      RODBC::sqlSave(my_db, wxdat, tablename = prcp_data_table,
+      RODBC::sqlSave(my_db, prcp_dat, tablename = prcp_data_table,
                      append = FALSE, rownames = FALSE, colnames = FALSE,
                      safer = FALSE, addPK = TRUE, fast = TRUE)
       } else({
-        RODBC::sqlSave(my_db, wxdat, tablename = prcp_data_table,
+        RODBC::sqlSave(my_db, prcp_dat, tablename = prcp_data_table,
                      append = TRUE, rownames = FALSE, colnames = FALSE,
                      addPK = TRUE, fast = TRUE)
         })
     } else({
-      wxdat <- dat$data |>
+      tr_dat <- dat$data |>
         dplyr::mutate("Date" = as.character(Date,
                                             format = "%Y-%m-%d %H:%M:%S"))
       # Export to DB
       if(!temp_rh_data_table %in% RODBC::sqlTables(my_db)$TABLE_NAME){
-        RODBC::sqlSave(my_db, wxdat, tablename = temp_rh_data_table,
+        RODBC::sqlSave(my_db, tr_dat, tablename = temp_rh_data_table,
                        append = FALSE, rownames = FALSE, colnames = FALSE,
                        safer = FALSE, addPK = TRUE, fast = TRUE)
         } else({
-          RODBC::sqlSave(my_db, wxdat, tablename = temp_rh_data_table,
+          RODBC::sqlSave(my_db, tr_dat, tablename = temp_rh_data_table,
                        append = TRUE, rownames = FALSE, colnames = FALSE,
                        addPK = TRUE, fast = TRUE)
           })

@@ -8,7 +8,7 @@ This package imports the workbooks and *.csv files into R, than standardizes the
 Currently, the weather data process is developed for the *.csv files from Hoboware.
 Excel workbook processing is under development.
 
-Version: 0.0.1
+Version: 0.1.0
 
 Depends: R (>= 4.0)
 
@@ -34,7 +34,6 @@ devtools::install_github("scoyoc/dataprocessR")
 
 ## Examples
 ``` r
-# Testing weather data functions
 library("dataprocessR")
 
 # Connect to DB
@@ -49,18 +48,20 @@ my_file <- file_list[10]
 
 # Process file and save to database
 import_hobo_to_db(my_file = my_file, my_db = my_db,
-                  import_table = "tbl_import_table",
+                  import_table = "tbl_import_log",
                   raw_data_table = "tbl_raw_data",
-                  data_table = "tbl_data",
-                  details_table = "tbl_details")
+                  prcp_data_table = "tbl_prcp_data",
+                  temp_rh_data_table = "tbl_temp_rh_data",
+                  details_table = "tbl_logger_details")
 
 #-- Batch Processing --
 lapply(file_list[1:5], function(this_file){
   import_hobo_to_db(this_file, my_db = my_db,
-                    import_table = "tbl_import_table",
+                    import_table = "tbl_import_log",
                     raw_data_table = "tbl_raw_data",
-                    data_table = "tbl_data",
-                    details_table = "tbl_details")
+                    prcp_data_table = "tbl_prcp_data",
+                    temp_rh_data_table = "tbl_temp_rh_data",
+                    details_table = "tbl_logger_details")
 })
 
 # Close database

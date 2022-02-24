@@ -45,21 +45,24 @@ Microsoft Access Database.
 }
 \examples{
 \dontrun{
+library("dataprocessR")
+
 # Connect to DB
-# RODBC::odbcClose(my_db); rm(my_db)
-my_db <- RODBC::odbcConnectAccess2007("VegTest.accdb")
+my_db <- RODBC::odbcConnectAccess2007("C:/path/to/database.accdb")
 
 # List files
-my_dir <- "L:/LTVMP/Data/Weather Data/2008"
+my_dir <- "C:/path/to/data"
 file_list <- list.files(my_dir, pattern = ".csv", full.names = TRUE,
                         recursive = FALSE)
-# Select file and process data
-my_file <- file_list[7]
+# Select file
+my_file <- file_list[10]
 
+# Process file and save to database
 import_hobo_to_db(my_file = my_file, my_db = my_db,
-                  import_table = "tbl_import_table",
+                  import_table = "tbl_import_log",
                   raw_data_table = "tbl_raw_data",
-                  data_table = "tbl_data",
-                  details_table = "tbl_details")
+                  prcp_data_table = "tbl_prcp_data",
+                  temp_rh_data_table = "tbl_temp_rh_data",
+                  details_table = "tbl_logger_details")
 }
 }
