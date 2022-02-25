@@ -68,22 +68,6 @@ import_hobo_to_db <- function(my_file, my_db, import_table, raw_data_table,
                   DeploymentNumber, LaunchTime, FirstSampleTime,
                   LastSampleTime) |>
     dplyr::mutate("ImportDate" = as.character(lubridate::today()))
-  # Export to DB
-  if(verbose == TRUE) message("- Writing import log to database")
-  if(!import_table %in% RODBC::sqlTables(my_db)$TABLE_NAME){
-    RODBC::sqlSave(my_db, file_info, tablename = import_table,
-                   append = FALSE, rownames = FALSE, colnames = FALSE,
-                   safer = FALSE, addPK = TRUE, fast = TRUE)
-  } else(
-    # Check if file has been processed
-    if(basename(my_file) %in% RODBC::sqlFetch(my_db, import_table)$FileName){
-      stop("File has already been processed.")
-    } else(
-      RODBC::sqlSave(my_db, file_info, tablename = import_table,
-                     append = TRUE, rownames = FALSE, colnames = FALSE,
-                     addPK = TRUE, fast = TRUE)
-      )
-    )
 
   #-- Raw Data --
   # Prep data
@@ -147,5 +131,22 @@ import_hobo_to_db <- function(my_file, my_db, import_table, raw_data_table,
       RODBC::sqlSave(my_db, dat$details, tablename = details_table,
                      append = TRUE, rownames = FALSE, colnames = FALSE,
                      addPK = TRUE, fast = TRUE)
-    )
+      )
+
+  # Export Import Record to DB
+  if(verbose == TRUE) message("- Writing import log to database")
+  if(!import_table %in% RODBC::sqlTables(my_db)$TABLE_NAME){
+    RODBC::sqlSave(my_db, file_info, tablename = import_table,
+                   append = FALSE, rownames = FALSE, colnames = FALSE,
+                   safer = FALSE, addPK = TRUE, fast = TRUE)
+    } else(
+      # Check if file has been processed
+      if(basename(my_file) %in% RODBC::sqlFetch(my_db, import_table)$FileName){
+        stop("File has already been processed.")
+        } else(
+          RODBC::sqlSave(my_db, file_info, tablename = import_table,
+                     append = TRUE, rownames = FALSE, colnames = FALSE,
+                     addPK = TRUE, fast = TRUE)
+          )
+      )
   }
