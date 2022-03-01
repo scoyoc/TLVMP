@@ -46,12 +46,17 @@ import_hobo_to_db <- function(my_file, my_db, import_table, raw_data_table,
                               prcp_data_table, temp_rh_data_table,
                               details_table, verbose = TRUE){
 
+  # Check if file has been processed
+  if(import_table %in% RODBC::sqlTables(my_db)$TABLE_NAME){
+     if(basename(my_file) %in% RODBC::sqlFetch(my_db, import_table)$FileName){
+       stop("File has already been processed.")
+       }
+  }
+
   if(verbose == TRUE) message(glue::glue("Processing {basename(my_file)}"))
   #-- Process hobo file --
-  dat <- suppressMessages(
-    raindancer::import_wxdat(my_file) |>
+  dat <- raindancer::import_wxdat(my_file) |>
       raindancer::process_hobo()
-  )
 
   #-- Import Record --
   # Prep data
@@ -63,7 +68,7 @@ import_hobo_to_db <- function(my_file, my_db, import_table, raw_data_table,
                                  "First Sample Time", "Last Sample Time")) |>
     tidyr::spread(key = "Details", value = "Value")
   names(details) <- gsub(" ", "", names(details))
-  file_info <- suppressMessages(dplyr::left_join(file_info, details)) |>
+  file_info <- dplyr::left_join(file_info, details, by = "FileName") |>
     dplyr::select(FileName, PlotID, Element, Product, SerialNumber, LaunchName,
                   DeploymentNumber, LaunchTime, FirstSampleTime,
                   LastSampleTime) |>
@@ -139,14 +144,8 @@ import_hobo_to_db <- function(my_file, my_db, import_table, raw_data_table,
     RODBC::sqlSave(my_db, file_info, tablename = import_table,
                    append = FALSE, rownames = FALSE, colnames = FALSE,
                    safer = FALSE, addPK = TRUE, fast = TRUE)
-    } else(
-      # Check if file has been processed
-      if(basename(my_file) %in% RODBC::sqlFetch(my_db, import_table)$FileName){
-        stop("File has already been processed.")
-        } else(
-          RODBC::sqlSave(my_db, file_info, tablename = import_table,
+    } else(RODBC::sqlSave(my_db, file_info, tablename = import_table,
                      append = TRUE, rownames = FALSE, colnames = FALSE,
                      addPK = TRUE, fast = TRUE)
-          )
       )
-  }
+}
