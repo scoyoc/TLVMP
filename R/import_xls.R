@@ -25,6 +25,17 @@
 #' @seealso \code{\link[readxl]{read_excel}}
 #'
 #' @examples
+#' \dontrun{
+#' library("dataprocessR")
+#'
+#' # List files
+#' my_dir <- "C:/path/to/data"
+#' file_list <- list.files(my_dir, pattern = ".xls", full.names = TRUE,
+#'                         recursive = FALSE)
+#'
+#' # Import Excel workbook into R
+#' import_xls(my_xls = file_list[1])
+#' }
 import_xls <- function(my_xls){
   # Testing: my_xls <- files[2]
 

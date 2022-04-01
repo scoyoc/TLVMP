@@ -30,6 +30,19 @@ This function pulls information and data from the "SiteInfo" and
 "Data" sheets of the SEUG LTVMP Excel workbook and mungesthem from wide
 to long format.
 }
+\examples{
+\dontrun{
+library("dataprocessR")
+
+# List files
+my_dir <- "C:/path/to/data"
+file_list <- list.files(my_dir, pattern = ".xls", full.names = TRUE,
+                        recursive = FALSE)
+
+# Import Excel workbook into R
+import_xls(my_xls = file_list[1])
+}
+}
 \seealso{
 \code{\link[readxl]{read_excel}}
 }
