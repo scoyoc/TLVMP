@@ -1,4 +1,4 @@
-#' Import Onset Hobo data into Access Database
+#' Export Onset Hobo data to Access Database
 #'
 #' This function uses the [raindancer](https://github.com/scoyoc/raindancer)
 #'     package to processes data from Onset HOBO loggers used in the SEUG LTMVP

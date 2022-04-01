@@ -2,3 +2,4 @@
 
 export(export_hobo)
 export(export_hobo_2008)
+export(import_xls)

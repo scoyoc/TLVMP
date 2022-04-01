@@ -2,7 +2,7 @@
 % Please edit documentation in R/export_hobo.R
 \name{export_hobo}
 \alias{export_hobo}
-\title{Import Onset Hobo data into Access Database}
+\title{Export Onset Hobo data to Access Database}
 \usage{
 export_hobo(
   my_file,

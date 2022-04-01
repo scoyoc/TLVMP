@@ -26,8 +26,10 @@ Imports:
     glue,
     lubridate,
     raindancer,
+    readxl,
     RODBC,
     stringr,
     tibble,
-    tidyr
+    tidyr,
+    tidyselect
 Suggests: 
