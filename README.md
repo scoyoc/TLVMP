@@ -1,18 +1,16 @@
 # dataprocessR
 
-This package standardizes raw data collected in the field and uploads them to the Southeast Utah Group (SEUG) Long-term Vegetation Monitoing Program (LTVMP) database. 
+This package processes data collected in the field and exports them to the Southeast Utah Group (SEUG) Long-term Vegetation Monitoring Program (LTVMP) database. 
 Plant and ground cover data are collected in the field using paper datasheets, then transcribed into Excel workbooks. 
+This package imports the workbook files into R, restructures the data from wide to long format, then exports them to the database.
 Onset data loggers collect temperature, relative humidity, and precipitation data that are exported to comma delimited files (*.csv) using the HOBOware application from Onset. 
-This package imports the workbooks and *.csv files into R, than standardizes the data before exporting them to the database.
+The [raindancer](https://github.com/scoyoc/raindancer) package is used to import data from the Onset data loggers into R and summarize them; this package then exports the processed data to the database.
 
-Currently, the weather data process is developed for the *.csv files from Hoboware.
-Excel workbook processing is under development.
-
-Version: 0.1.0
+Version: 0.2.0
 
 Depends: R (>= 4.0)
 
-Imports: dplyr, glue, lubridate, dataprocessR, RODBC, stringr, tibble, tidyr
+Imports: dplyr, glue, lubridate, raindancer, RODBC, stringr, tibble, tidyr
 
 Author: Matthew Van Scoyoc
 
@@ -47,21 +45,21 @@ file_list <- list.files(my_dir, pattern = ".csv", full.names = TRUE,
 my_file <- file_list[10]
 
 # Process file and save to database
-import_hobo_to_db(my_file = my_file, my_db = my_db,
-                  import_table = "tbl_import_log",
-                  raw_data_table = "tbl_raw_data",
-                  prcp_data_table = "tbl_prcp_data",
-                  temp_rh_data_table = "tbl_temp_rh_data",
-                  details_table = "tbl_logger_details")
+export_hobo(my_file = my_file, my_db = my_db,
+            import_table = "tbl_import_log",
+            raw_data_table = "tbl_raw_data",
+            prcp_data_table = "tbl_prcp_data",
+            temp_rh_data_table = "tbl_temp_rh_data",
+            details_table = "tbl_logger_details")
 
 #-- Batch Processing --
 lapply(file_list[1:5], function(this_file){
-  import_hobo_to_db(this_file, my_db = my_db,
-                    import_table = "tbl_import_log",
-                    raw_data_table = "tbl_raw_data",
-                    prcp_data_table = "tbl_prcp_data",
-                    temp_rh_data_table = "tbl_temp_rh_data",
-                    details_table = "tbl_logger_details")
+  export_hobo(this_file, my_db = my_db,
+              import_table = "tbl_import_log",
+              raw_data_table = "tbl_raw_data",
+              prcp_data_table = "tbl_prcp_data",
+              temp_rh_data_table = "tbl_temp_rh_data",
+              details_table = "tbl_logger_details")
 })
 
 # Close database

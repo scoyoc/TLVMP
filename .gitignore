@@ -8,4 +8,4 @@
 
 # Ignore build directory
 /exec
-/*.Rproj
+/dataprocessR.Rproj

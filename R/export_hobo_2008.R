@@ -1,7 +1,8 @@
 #' Import Onset Hobo data into Access Database
 #'
-#' This function processes data from Onset HOBOware and exports them to a
-#'     Microsoft Access Database.
+#' This function uses the [raindancer](https://github.com/scoyoc/raindancer)
+#'     package to processes data from Onset HOBO loggers used in the SEUG LTMVP
+#'     from 2008-2019 and exports them to a Microsoft Access Database.
 #'
 #' @param my_file A character string of the complete file path of your *.csv
 #'     file.
@@ -14,14 +15,30 @@
 #'     temperature and relative humidity data table.
 #' @param details_table A character string of the name of the logger details
 #'     table.
-#' @param verbose Logical. Default is TRUE. If FALSE, messages are suppressed.
+#' @param verbose Logical. Show messages showing progress. Default is TRUE. If
+#'     FALSE, messages are suppressed.
+#' @param view Logical. Prints data to console before writing them to the
+#'     database. Default is TRUE. If FALSE, data are not printed and there is no
+#'     prompt before writing data to the database.
+#'
+#' @details This function uses \code{\link[raindancer]{import_hobo_2008}} to
+#'     read Hobo data in into R and then uses
+#'     \code{\link[raindancer]{process_hobo}} to summarise the data. The
+#'     processed data are then exported to a connected database.
 #'
 #' @return Data is written to database tables. Objects are not returned.
+#'
+#' @seealso [raindancer](https://github.com/scoyoc/raindancer),
+#'     \code{\link[raindancer]{import_hobo_2008}},
+#'     \code{\link[raindancer]{raindance}}, \code{\link[raindancer]{sundance}},
+#'     \code{\link[raindancer]{process_hobo}}, \code{\link{RODBC}},
+#'     \code{\link[RODBC]{sqlSave}}, \code{\link[RODBC]{odbcConnectAccess2007}}
 #'
 #' @export
 #'
 #' @examples
 #' \dontrun{
+#' library("raindancer")
 #' library("dataprocessR")
 #'
 #' # Connect to DB
@@ -35,16 +52,16 @@
 #' my_file <- file_list[10]
 #'
 #' # Process file and save to database
-#' import_hobo_to_db(my_file = my_file, my_db = my_db,
-#'                   import_table = "tbl_import_log",
-#'                   raw_data_table = "tbl_raw_data",
-#'                   prcp_data_table = "tbl_prcp_data",
-#'                   temp_rh_data_table = "tbl_temp_rh_data",
-#'                   details_table = "tbl_logger_details")
+#' export_hobo_2008(my_file = my_file, my_db = my_db,
+#'                  import_table = "tbl_import_log",
+#'                  raw_data_table = "tbl_raw_data",
+#'                  prcp_data_table = "tbl_prcp_data",
+#'                  temp_rh_data_table = "tbl_temp_rh_data",
+#'                  details_table = "tbl_logger_details")
 #' }
-import_hobo_to_db <- function(my_file, my_db, import_table, raw_data_table,
+export_hobo_2008 <- function(my_file, my_db, import_table, raw_data_table,
                               prcp_data_table, temp_rh_data_table,
-                              details_table, verbose = TRUE){
+                              details_table, verbose = TRUE, view = TRUE){
 
   # Check if file has been processed
   if(import_table %in% RODBC::sqlTables(my_db)$TABLE_NAME){
@@ -55,23 +72,15 @@ import_hobo_to_db <- function(my_file, my_db, import_table, raw_data_table,
 
   if(verbose == TRUE) message(glue::glue("Processing {basename(my_file)}"))
   #-- Process hobo file --
-  dat <- raindancer::import_wxdat(my_file) |>
-      raindancer::process_hobo()
+  dat <- raindancer::import_hobo_2008(my_file) |> raindancer::process_hobo()
+  if(view == TRUE){
+    print(dat)
+    readline(prompt = "Press [enter] to export data to database.")
+    }
 
   #-- Import Record --
   # Prep data
   file_info <- dat$file_info |>
-    dplyr::select(FileName, PlotID, Element)
-  details <- dat$details |>
-    dplyr::filter(Details %in% c("Product", "Serial Number", "Launch Name",
-                                 "Deployment Number", "Launch Time",
-                                 "First Sample Time", "Last Sample Time")) |>
-    tidyr::spread(key = "Details", value = "Value")
-  names(details) <- gsub(" ", "", names(details))
-  file_info <- dplyr::left_join(file_info, details, by = "FileName") |>
-    dplyr::select(FileName, PlotID, Element, Product, SerialNumber, LaunchName,
-                  DeploymentNumber, LaunchTime, FirstSampleTime,
-                  LastSampleTime) |>
     dplyr::mutate("ImportDate" = as.character(lubridate::today()))
 
   #-- Raw Data --

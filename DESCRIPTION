@@ -7,15 +7,13 @@ Authors@R:
            role = c("aut", "cre"),
            email = "matthew_vanscoyoc@nps.gov",
            comment = c(ORCID = "0000-0001-6821-4476"))
-Description: This package standardizes raw data collected in the field and 
-    uploads them to the Southeast Utah Group (SEUG) Long-term Vegetation 
-    Monitoing Program (LTVMP) database. Plant and ground cover data are 
-    collected in the field using paper datasheets, then transcribed into Excel 
-    workbooks. Onset data loggers collect temperature, relative humidity, and 
-    precipitation data that are exported to comma delimited files 
-    (*.csv) using the HOBOware application from Onset. This package imports 
-    the workbooks and *.csv files into R, than standardizes the data before 
-    exporting them to the database.
+Description: This package processes data collected in the field and exports them 
+    to the Southeast Utah Group (SEUG) Long-term Vegetation Monitoring Program 
+    (LTVMP) database. This package imports the workbook files into R, 
+    restructures the data from wide to long format, then exports them to the 
+    database. The [raindancer package](https://github.com/scoyoc/raindancer) is 
+    used to import data from the Onset data loggers into R and summarize them; 
+    this package then exports the processed data to the database.
 Depends: 
     R (>= 4.0)
 License: MIT + file LICENSE
@@ -24,12 +22,12 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Imports: 
-    dplyr (>= 1.0.2),
-    glue (>= 1.6.1),
-    lubridate (>= 1.7.9),
-    raindancer (>= 0.0.1),
-    RODBC (>= 1.3),
-    stringr (>= 1.4.0),
-    tibble (>= 3.0.4),
-    tidyr (>= 1.1.2)
+    dplyr,
+    glue,
+    lubridate,
+    raindancer,
+    RODBC,
+    stringr,
+    tibble,
+    tidyr
 Suggests: 
