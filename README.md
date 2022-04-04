@@ -34,35 +34,55 @@ devtools::install_github("scoyoc/dataprocessR")
 ``` r
 library("dataprocessR")
 
-# Connect to DB
+# Connect to DB ----
 my_db <- RODBC::odbcConnectAccess2007("C:/path/to/database.accdb")
 
-#-- Process weather data
-# List files
-my_dir <- "C:/path/to/data"
-file_list <- list.files(my_dir, pattern = ".csv", full.names = TRUE,
-                        recursive = FALSE)
+# Process weather data ----
+#-- List files
+wx_dir <- "C:/path/to/data"
+wx_files <- list.files(wx_dir, pattern = ".csv", full.names = TRUE,
+                       recursive = FALSE)
+#-- Process a single file
+export_hobo(my_file = wx_files[1], my_db = my_db,
+            import_table = "tblWxImportLog",
+            raw_data_table = "tblWxData_raw",
+            prcp_data_table = "tblWxData_PRCP",
+            temp_rh_data_table = "tblWxData_TEMP_RH",
+            details_table = "tblWxLoggerDetails")
 
-# Process file and save to database
-export_hobo(my_file = file_list[1], my_db = my_db,
-            import_table = "tbl_import_log",
-            raw_data_table = "tbl_raw_data",
-            prcp_data_table = "tbl_prcp_data",
-            temp_rh_data_table = "tbl_temp_rh_data",
-            details_table = "tbl_logger_details")
-
-# Batch processing several files
-lapply(file_list[2:5], function(this_file){
-  export_hobo(this_file, my_db = my_db,
-              import_table = "tbl_import_log",
-              raw_data_table = "tbl_raw_data",
-              prcp_data_table = "tbl_prcp_data",
-              temp_rh_data_table = "tbl_temp_rh_data",
-              details_table = "tbl_logger_details",
+#-- Batch process several files
+lapply(wx_files[2:10], function(this_file){
+  export_hobo(my_file = this_file, my_db = my_db,
+              import_table = "tblWxImportLog",
+              raw_data_table = "tblWxData_raw",
+              prcp_data_table = "tblWxData_PRCP",
+              temp_rh_data_table = "tblWxData_TEMP_RH",
+              details_table = "tblWxLoggerDetails",
               view = FALSE)
 })
 
-# Close database
+# Process plant and ground cover data ----
+#-- List files
+veg_dir <- "C:/pate/to/data"
+veg_files <- list.files(veg_dir, pattern = ".xls", full.names = TRUE, 
+                        recursive = FALSE)
+
+#-- Process a single file
+export_xls(my_xls = veg_files[1], my_db = my_db,
+           data_table = tblData_FreqCov,
+           sampling_event_table = tblSamplingEvent,
+           import_table = tblImportRecord)
+
+#-- Batch process several files
+lapply(veg_files[2:10], function(this_xls){
+  export_xls(my_xls = this_xls, my_db = my_db,
+             data_table = tblData_FreqCov,
+             sampling_event_table = tblSamplingEvent,
+             import_table = tblImportRecord,
+             view = FALSE)
+})
+
+# Close database ----
 RODBC::odbcClose(my_db); rm(my_db)
 ```
 

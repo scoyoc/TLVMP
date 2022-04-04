@@ -53,7 +53,7 @@ from 2008-2019. It then exports the data to a Microsoft Access database.
 \details{
 This function uses two functions from the raindacer package.
 \code{\link[raindancer]{import_hobo_2008}} is usec to read Hobo data in
-into R, and then \code{\link[raindancer]{process_hobo_2008}} is used to
+into R, and then \code{\link[raindancer]{process_hobo}} is used to
 summarize the data. The processed data are then exported to a connected
 Microsoft Access database.
 }

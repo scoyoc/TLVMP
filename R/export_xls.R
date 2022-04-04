@@ -33,7 +33,7 @@
 #'
 #' # List files
 #' my_dir <- "C:/path/to/data"
-#' file_list <- list.files(my_dir, pattern = ".csv", full.names = TRUE,
+#' file_list <- list.files(my_dir, pattern = ".xls", full.names = TRUE,
 #'                         recursive = FALSE)
 #'
 #' # Process file and save to database
