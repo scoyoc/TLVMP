@@ -2,7 +2,8 @@
 #'
 #' This function uses the [raindancer](https://github.com/scoyoc/raindancer)
 #'     package to processes data from Onset HOBO loggers used in the SEUG LTMVP
-#'     from 2020-present and exports them to a Microsoft Access Database
+#'     from 2020-present. It then exports the data to a Microsoft Access
+#'     database.
 #'
 #' @param my_file A character string of the complete file path of your *.csv
 #'     file.
@@ -21,10 +22,11 @@
 #'     database. Default is TRUE. If FALSE, data are not printed and there is no
 #'     prompt before writing data to the database.
 #'
-#' @details This function uses \code{\link[raindancer]{import_hobo}} to read
-#'     Hobo data in into R and then uses \code{\link[raindancer]{process_hobo}}
-#'     to summarise the data. The processed data are then exported to a
-#'     connected database.
+#' @details This function uses two functions from the raindacer package.
+#'     \code{\link[raindancer]{import_hobo}} is usec to read Hobo data in into
+#'     R, and then \code{\link[raindancer]{process_hobo}} is used to
+#'     summarize the data. The processed data are then exported to a connected
+#'     Microsoft Access database.
 #'
 #' @return Data is written to database tables. Objects are not returned.
 #'
@@ -48,16 +50,14 @@
 #' my_dir <- "C:/path/to/data"
 #' file_list <- list.files(my_dir, pattern = ".csv", full.names = TRUE,
 #'                         recursive = FALSE)
-#' # Select file
-#' my_file <- file_list[12]
 #'
 #' # Process file and save to database
-#' export_hobo(my_file = my_file, my_db = my_db,
-#'             import_table = "tbl_import_log",
-#'             raw_data_table = "tbl_raw_data",
-#'             prcp_data_table = "tbl_prcp_data",
-#'             temp_rh_data_table = "tbl_temp_rh_data",
-#'             details_table = "tbl_logger_details")
+#' export_hobo(my_file = file_list[1], my_db = my_db,
+#'             import_table = "tblWxImportLog",
+#'             raw_data_table = "tblWxData_raw",
+#'             prcp_data_table = "tblWxData_PRCP",
+#'             temp_rh_data_table = "tblWxData_TEMP_RH",
+#'             details_table = "tblWxLoggerDetails")
 #' }
 export_hobo <- function(my_file, my_db, import_table, raw_data_table,
                               prcp_data_table, temp_rh_data_table,
@@ -136,17 +136,4 @@ export_hobo <- function(my_file, my_db, import_table, raw_data_table,
   # Export Import Record to DB
   if(verbose == TRUE) message("- Writing import log to database")
   export_table(my_db, my_df = file_info, my_table = import_table)
-}
-
-export_table <- function(my_db, my_df, my_table){
-  # my_df = dat$file_info; my_table = "tblWxImportLog2"
-  if(my_table %in% RODBC::sqlTables(my_db)$TABLE_NAME){
-    RODBC::sqlSave(my_db, my_df, tablename = my_table,
-                   append = TRUE, rownames = FALSE, colnames = FALSE,
-                   safer = TRUE, addPK = TRUE, fast = TRUE)
-  } else({
-    RODBC::sqlSave(my_db, my_df, tablename = my_table,
-                   append = FALSE, rownames = FALSE, colnames = FALSE,
-                   safer = TRUE, addPK = TRUE, fast = TRUE)
-  })
 }

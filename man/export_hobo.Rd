@@ -48,13 +48,15 @@ Data is written to database tables. Objects are not returned.
 \description{
 This function uses the \href{https://github.com/scoyoc/raindancer}{raindancer}
 package to processes data from Onset HOBO loggers used in the SEUG LTMVP
-from 2020-present and exports them to a Microsoft Access Database
+from 2020-present. It then exports the data to a Microsoft Access
+database.
 }
 \details{
-This function uses \code{\link[raindancer]{import_hobo}} to read
-Hobo data in into R and then uses \code{\link[raindancer]{process_hobo}}
-to summarise the data. The processed data are then exported to a
-connected database.
+This function uses two functions from the raindacer package.
+\code{\link[raindancer]{import_hobo}} is usec to read Hobo data in into
+R, and then \code{\link[raindancer]{process_hobo}} is used to
+summarize the data. The processed data are then exported to a connected
+Microsoft Access database.
 }
 \examples{
 \dontrun{
@@ -68,16 +70,14 @@ my_db <- RODBC::odbcConnectAccess2007("C:/path/to/database.accdb")
 my_dir <- "C:/path/to/data"
 file_list <- list.files(my_dir, pattern = ".csv", full.names = TRUE,
                         recursive = FALSE)
-# Select file
-my_file <- file_list[12]
 
 # Process file and save to database
-export_hobo(my_file = my_file, my_db = my_db,
-            import_table = "tbl_import_log",
-            raw_data_table = "tbl_raw_data",
-            prcp_data_table = "tbl_prcp_data",
-            temp_rh_data_table = "tbl_temp_rh_data",
-            details_table = "tbl_logger_details")
+export_hobo(my_file = file_list[1], my_db = my_db,
+            import_table = "tblWxImportLog",
+            raw_data_table = "tblWxData_raw",
+            prcp_data_table = "tblWxData_PRCP",
+            temp_rh_data_table = "tblWxData_TEMP_RH",
+            details_table = "tblWxLoggerDetails")
 }
 }
 \seealso{

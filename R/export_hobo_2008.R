@@ -2,7 +2,7 @@
 #'
 #' This function uses the [raindancer](https://github.com/scoyoc/raindancer)
 #'     package to processes data from Onset HOBO loggers used in the SEUG LTMVP
-#'     from 2008-2019 and exports them to a Microsoft Access Database.
+#'     from 2008-2019. It then exports the data to a Microsoft Access database.
 #'
 #' @param my_file A character string of the complete file path of your *.csv
 #'     file.
@@ -21,10 +21,11 @@
 #'     database. Default is TRUE. If FALSE, data are not printed and there is no
 #'     prompt before writing data to the database.
 #'
-#' @details This function uses \code{\link[raindancer]{import_hobo_2008}} to
-#'     read Hobo data in into R and then uses
-#'     \code{\link[raindancer]{process_hobo}} to summarise the data. The
-#'     processed data are then exported to a connected database.
+#' @details This function uses two functions from the raindacer package.
+#'     \code{\link[raindancer]{import_hobo_2008}} is usec to read Hobo data in
+#'     into R, and then \code{\link[raindancer]{process_hobo_2008}} is used to
+#'     summarize the data. The processed data are then exported to a connected
+#'     Microsoft Access database.
 #'
 #' @return Data is written to database tables. Objects are not returned.
 #'
@@ -53,11 +54,11 @@
 #'
 #' # Process file and save to database
 #' export_hobo_2008(my_file = my_file, my_db = my_db,
-#'                  import_table = "tbl_import_log",
-#'                  raw_data_table = "tbl_raw_data",
-#'                  prcp_data_table = "tbl_prcp_data",
-#'                  temp_rh_data_table = "tbl_temp_rh_data",
-#'                  details_table = "tbl_logger_details")
+#'                  import_table = "tblWxImportLog",
+#'                  raw_data_table = "tblWxData_raw",
+#'                  prcp_data_table = "tblWxData_PRCP",
+#'                  temp_rh_data_table = "tblWxData_TEMP_RH",
+#'                  details_table = "tblWxLoggerDetails")
 #' }
 export_hobo_2008 <- function(my_file, my_db, import_table, raw_data_table,
                               prcp_data_table, temp_rh_data_table,

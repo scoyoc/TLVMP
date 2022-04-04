@@ -37,29 +37,29 @@ library("dataprocessR")
 # Connect to DB
 my_db <- RODBC::odbcConnectAccess2007("C:/path/to/database.accdb")
 
+#-- Process weather data
 # List files
 my_dir <- "C:/path/to/data"
 file_list <- list.files(my_dir, pattern = ".csv", full.names = TRUE,
                         recursive = FALSE)
-# Select file
-my_file <- file_list[10]
 
 # Process file and save to database
-export_hobo(my_file = my_file, my_db = my_db,
+export_hobo(my_file = file_list[1], my_db = my_db,
             import_table = "tbl_import_log",
             raw_data_table = "tbl_raw_data",
             prcp_data_table = "tbl_prcp_data",
             temp_rh_data_table = "tbl_temp_rh_data",
             details_table = "tbl_logger_details")
 
-#-- Batch Processing --
-lapply(file_list[1:5], function(this_file){
+# Batch processing several files
+lapply(file_list[2:5], function(this_file){
   export_hobo(this_file, my_db = my_db,
               import_table = "tbl_import_log",
               raw_data_table = "tbl_raw_data",
               prcp_data_table = "tbl_prcp_data",
               temp_rh_data_table = "tbl_temp_rh_data",
-              details_table = "tbl_logger_details")
+              details_table = "tbl_logger_details",
+              view = FALSE)
 })
 
 # Close database

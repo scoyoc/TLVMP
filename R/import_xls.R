@@ -37,7 +37,7 @@
 #' import_xls(my_xls = file_list[1])
 #' }
 import_xls <- function(my_xls){
-  # Testing: my_xls <- files[2]
+  # Testing: my_xls <- veg_files[1]
 
   site_info <- readxl::read_excel(path = my_xls, sheet = "SiteInfo",
                                   range = "B2:C105", trim_ws = TRUE,
@@ -104,10 +104,10 @@ import_xls <- function(my_xls){
                                      Key = paste(SampleYear, PlotID, Quad,
                                                  SppCode, sep = ".")) |>
                        dplyr::select(Key, C)) |>
-    dplyr::mutate(NAs = apply(., 1, function(x) sum(is.na(x)))) |>
-    dplyr::filter(NAs < 2) |>
-    dplyr::select(Key, SampleYear, PlotID, Quad, SppCode, F, C) |>
-    dplyr::arrange(Quad)
+    dplyr::arrange(Quad) |>
+    dplyr::mutate(NAs = ifelse(is.na(F) & is.na(C), 1, 0)) |>
+    dplyr::filter(NAs == 0) |>
+    dplyr::select(Key, SampleYear, PlotID, Quad, SppCode, F, C)
 
   # Return list
   return(list(file_info = file_info,
