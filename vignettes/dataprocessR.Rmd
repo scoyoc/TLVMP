@@ -1,0 +1,125 @@
+---
+title: "Import Onset HOBO Logger Data into R"
+author: "Matthew Van Scoyoc, National Park Service"
+date: "`r format(as.Date(Sys.Date(), format = '%Y-%m-%d'), '%B %d, %Y')`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{dataprocessR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, eval=TRUE, echo=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+library("raindancer")
+library("dataprocessR")
+```
+
+# Introduction
+This package processes plant and ground cover data collected in the field and exports them to the Southeast Utah Group (SEUG) Long-term Vegetation Monitoring Program (LTVMP) database. 
+Plant cover and frequency and ground cover data are collected in the field using paper datasheets, then transcribed into Excel workbooks. 
+This package imports the workbook files into R, restructures the data, then exports them to the database.
+Onset data loggers collect temperature, relative humidity, and precipitation data that are exported to comma delimited files (*.csv) using the HOBOware application from Onset. 
+The [raindancer](https://github.com/scoyoc/raindancer) package is used to import these data into R and summarize them; this package then exports the processed data to the SEUG LTVMP database.
+
+# Installation
+This package is available on [GitHub](https://github.com/) at [https://github.com/scoyoc/dataprocessR](https://github.com/scoyoc/dataprocessR). 
+Dependent packages include dplyr, glue, lubridate, raindancer, RODBC, stringr, tibble, and tidyr. 
+Suggested pacakges include knitr and rmarkdown. 
+```{r Setup, eval=FALSE, echo = TRUE}
+# Install the devtools package
+if (!"devtools" %in% installed.packages()[, "Package"]) {
+  install.packages("devtools")
+}
+
+# Install dataprocessR
+devtools::install_github("scoyoc/dataprocessR")
+library("dataprocessR")
+
+# Install raindancer
+devtools::install_github("scoyoc/raindancer")
+library("raindancer")
+```
+
+# Plant and Ground Cover and Frequency Data
+Paper datasheets are used to collect field data. The data are then transcribed into Excel workbooks. 
+The paper datasheets are easy and cost effective way to collect field data and have proven to be valuable references when questions about cover data arise.  
+The Excel workbooks are effective ways for field technicians to enter and check data back in the office, but they layout of the spreadsheets are not conducive for data analysis.
+This package imports the data in the Excel workbook into R, restructures the data, then exports them to the SEUG LTVMP database.
+
+## Using *import_xls()*
+The *import_xls()* function requires the full path name to the file and returns a list with three components:  
+1. **file_info** is a vector that contains the file name, today's date, plot ID, and year the plot was sampled.  
+2. **sampling_event** is a vector that contains the year the plot was sampled, the plot ID, the sample date, and the names of the observers.  
+3. **data** is a data frame of cover and frequency data.
+
+Lets start by using *list.files()* to read a list of Excel files into R. 
+```{r import_example, eval=FALSE, echo=TRUE}
+file_list <- list.files(path = "C:/path/to/data", pattern = ".xls", 
+                        full.names = TRUE, recursive = FALSE)
+```
+
+There are some files included in this package for examples, so we'll use these for this vignette. 
+```{r import, eval=TRUE, echo=TRUE, results='markup'}
+file_list <- list.files(path = system.file("extdata", package = "dataprocessR"),
+                        pattern = ".xls", full.names = TRUE, recursive = FALSE)
+print(file_list)
+```
+Now that we have a list of full path names to the Excel files we can read them into R using the *import_xls()* function.
+```{r import_xls, eval=TRUE, echo=TRUE, results='markup'}
+dat <- import_xls(file_list[1])
+str(dat); names(dat)
+```
+
+Let's examine the components of the list returned by the *import_xls()* function.
+The first component returns information about the about the Excel file.
+```{r file_info, eval=TRUE, echo=TRUE, results='markup'}
+dplyr::glimpse(dat$file_info)
+```
+
+The second component returns information about the sampling event.
+```{r sampling_event, eval=TRUE, echo=TRUE, results='markup'}
+dplyr::glimpse(dat$sampling_event)
+```
+
+And the third component returns a data frame of raw data.
+```{r data_raw, eval=TRUE, echo=TRUE, results='markup'}
+dplyr::glimpse(dat$data)
+```
+
+## Using *export_xls()*
+The *export_xls()* function uses *import_xls()* to read the Excel workbooks into R, then exports the components returned by *import_xls()* to tables in the SEUG LTVMP database.
+This function imports the Excel workbooks and writes the data to the database, it does not return an object to R.
+This function requires five arguments and there are two options arguments:
+1. my_xls - The full path name to the Excel file.
+2. my_db - The name of the database object.
+3. data_table - The name of the data table in the database.
+4. sampling_event_table - The name of the sampling event table in the database.
+5. import_table - The name of the import log table in the database.
+6. verbose - Optional. Prints messages to the console showing function progress. Default is TRUE. If FALSE, messages are suppressed.
+7. view - Optional. Prints data to console before writing them to the database. Default is TRUE. If FALSE, data are not printed and there is no prompt before writing data to the database.
+
+### Connecting to a Database
+
+
+### Processing Excel Files
+Let's use *export_xls()*. 
+For this exercise we'll let the function print messages and view the data.
+```{r export_xls_show, eval=FALSE, echo=TRUE, results='markup'}
+export_xls(file_list[1], 
+           my_db = my_db,
+           data_table = "tblData_FreqCov",
+           sampling_event_table = "tblSamplingEvent",
+           import_table = "tblImportRecord")
+```
+```{r export_xls, eval=TRUE, echo=FALSE, results='markup'}
+export_xls(file_list[1], 
+           my_db = my_db,
+           data_table = "tblData_FreqCov",
+           sampling_event_table = "tblSamplingEvent",
+           import_table = "tblImportRecord", 
+           verbose = TRUE, view = FALSE)
+```
+
+
+

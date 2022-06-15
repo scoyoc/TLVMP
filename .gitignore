@@ -9,3 +9,4 @@
 # Ignore build directory
 /exec
 /*.Rproj
+inst/doc

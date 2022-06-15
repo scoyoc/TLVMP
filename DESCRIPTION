@@ -9,9 +9,9 @@ Authors@R:
            comment = c(ORCID = "0000-0001-6821-4476"))
 Description: This package processes data collected in the field and exports them 
     to the Southeast Utah Group (SEUG) Long-term Vegetation Monitoring Program 
-    (LTVMP) database. This package imports the workbook files into R, 
-    restructures the data from wide to long format, then exports them to the 
-    database. The [raindancer package](https://github.com/scoyoc/raindancer) is 
+    (LTVMP) database. This package imports Excel workbook files into R, 
+    restructures the data, then exports them to the database. The 
+    [raindancer package](https://github.com/scoyoc/raindancer) is 
     used to import data from the Onset data loggers into R and summarize them; 
     this package then exports the processed data to the database.
 Depends: 
@@ -33,3 +33,6 @@ Imports:
     tidyr,
     tidyselect
 Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
