@@ -94,7 +94,8 @@ import_xls <- function(my_xls){
                   F = as.integer(F),
                   Key = paste(SampleYear, PlotID, Quad, SppCode, sep = ".")) |>
     dplyr::full_join(dplyr::select(raw_dat, SppCode,
-                                   tidyselect::starts_with("C")) |>
+                                   tidyselect::starts_with("C"),
+                                   by = c("Key", "Key")) |>
                        tidyr::gather("Quad", "C", "C1":"C100", na.rm = FALSE) |>
                        dplyr::mutate(SampleYear = as.integer(sample_year),
                                      PlotID = plot_id,

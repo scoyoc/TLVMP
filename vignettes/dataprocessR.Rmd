@@ -1,6 +1,11 @@
 ---
-title: "Import Onset HOBO Logger Data into R"
-author: "Matthew Van Scoyoc, National Park Service"
+title: "Process Southeast Utah Group Long-term Vegetation Monitoring Data"
+author: 
+  - name: "Matthew Van Scoyoc"
+    affiliation: |
+      | NPS Southeast Utah Group Parks
+      | 2282 Resource Blvd
+      | Moab, Utah
 date: "`r format(as.Date(Sys.Date(), format = '%Y-%m-%d'), '%B %d, %Y')`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -9,24 +14,28 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, eval=TRUE, echo=FALSE}
+```{r, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 library("raindancer")
 library("dataprocessR")
 ```
 
 # Introduction
-This package processes plant and ground cover data collected in the field and exports them to the Southeast Utah Group (SEUG) Long-term Vegetation Monitoring Program (LTVMP) database. 
-Plant cover and frequency and ground cover data are collected in the field using paper datasheets, then transcribed into Excel workbooks. 
+
+This package processes plant and ground cover data collected in the field and exports them to the Southeast Utah Group (SEUG) Long-term Vegetation Monitoring Program (LTVMP) database.
+Plant cover and frequency and ground cover data are collected in the field using paper datasheets, then transcribed into Excel workbooks.
 This package imports the workbook files into R, restructures the data, then exports them to the database.
-Onset data loggers collect temperature, relative humidity, and precipitation data that are exported to comma delimited files (*.csv) using the HOBOware application from Onset. 
-The [raindancer](https://github.com/scoyoc/raindancer) package is used to import these data into R and summarize them; this package then exports the processed data to the SEUG LTVMP database.
+Onset data loggers collect temperature, relative humidity, and precipitation data that are exported to comma delimited files (\*.csv) using the HOBOware application from Onset.
+The [raindancer](https://github.com/scoyoc/raindancer) package is used to import these data into R and summarize them.
+This package then exports the processed data to the SEUG LTVMP database.
 
 # Installation
-This package is available on [GitHub](https://github.com/) at [https://github.com/scoyoc/dataprocessR](https://github.com/scoyoc/dataprocessR). 
-Dependent packages include dplyr, glue, lubridate, raindancer, RODBC, stringr, tibble, and tidyr. 
-Suggested pacakges include knitr and rmarkdown. 
-```{r Setup, eval=FALSE, echo = TRUE}
+
+This package is available on [GitHub](https://github.com/) at <https://github.com/scoyoc/dataprocessR>.
+Dependent packages include dplyr, glue, lubridate, raindancer, RODBC, stringr, tibble, and tidyr.
+Suggested packages include knitr and rmarkdown.
+
+```{r Setup, eval=FALSE, echo = TRUE, results='markup'}
 # Install the devtools package
 if (!"devtools" %in% installed.packages()[, "Package"]) {
   install.packages("devtools")
@@ -42,84 +51,200 @@ library("raindancer")
 ```
 
 # Plant and Ground Cover and Frequency Data
-Paper datasheets are used to collect field data. The data are then transcribed into Excel workbooks. 
-The paper datasheets are easy and cost effective way to collect field data and have proven to be valuable references when questions about cover data arise.  
-The Excel workbooks are effective ways for field technicians to enter and check data back in the office, but they layout of the spreadsheets are not conducive for data analysis.
+
+Paper datasheets are used to collect field data.
+The data are then transcribed into Excel workbooks.
+The paper datasheets are easy and cost effective way to collect field data and have proven to be valuable references when questions about cover data arise.
+The Excel workbooks are effective ways for field technicians to enter and check data back in the office, but the layout of the spreadsheets are not conducive for data analysis.
 This package imports the data in the Excel workbook into R, restructures the data, then exports them to the SEUG LTVMP database.
 
-## Using *import_xls()*
-The *import_xls()* function requires the full path name to the file and returns a list with three components:  
-1. **file_info** is a vector that contains the file name, today's date, plot ID, and year the plot was sampled.  
-2. **sampling_event** is a vector that contains the year the plot was sampled, the plot ID, the sample date, and the names of the observers.  
-3. **data** is a data frame of cover and frequency data.
+## Importing Excel Workbooks into R
 
-Lets start by using *list.files()* to read a list of Excel files into R. 
+The *import_xls()* function imports data from the Excel workbooks into R.
+The function requires the full path name to the Excel workbook.
+Lets start by using *list.files()* to read a list of Excel files into R.
+
 ```{r import_example, eval=FALSE, echo=TRUE}
-file_list <- list.files(path = "C:/path/to/data", pattern = ".xls", 
+veg_files <- list.files(path = "C:/path/to/data", pattern = ".xls", 
                         full.names = TRUE, recursive = FALSE)
 ```
 
-There are some files included in this package for examples, so we'll use these for this vignette. 
+There are some files included in this package for examples, so we'll use these for this vignette.
+
 ```{r import, eval=TRUE, echo=TRUE, results='markup'}
-file_list <- list.files(path = system.file("extdata", package = "dataprocessR"),
+veg_files <- list.files(path = system.file("extdata", package = "dataprocessR"),
                         pattern = ".xls", full.names = TRUE, recursive = FALSE)
-print(file_list)
+print(veg_files)
 ```
+
 Now that we have a list of full path names to the Excel files we can read them into R using the *import_xls()* function.
+The function returns a list with three components:\
+1.
+**file_info** is a vector that contains the file name, today's date, plot ID, and year the plot was sampled.\
+2.
+**sampling_event** is a vector that contains the year the plot was sampled, the plot ID, the sample date, and the names of the observers.\
+3.
+**data** is a data frame of cover and frequency data.
+
+Let's start with the first file.
+
 ```{r import_xls, eval=TRUE, echo=TRUE, results='markup'}
-dat <- import_xls(file_list[1])
-str(dat); names(dat)
+dat <- import_xls(veg_files[1])
+paste("class = ", class(dat)); paste("length = ", length(dat)); names(dat)
 ```
 
 Let's examine the components of the list returned by the *import_xls()* function.
-The first component returns information about the about the Excel file.
+
+The first component returns information about the Excel file.\
+**file_info**
+
 ```{r file_info, eval=TRUE, echo=TRUE, results='markup'}
-dplyr::glimpse(dat$file_info)
+str(dat$file_info)
 ```
 
-The second component returns information about the sampling event.
+The second component returns information about the sampling event.\
+**sampling_event**
+
 ```{r sampling_event, eval=TRUE, echo=TRUE, results='markup'}
-dplyr::glimpse(dat$sampling_event)
+str(dat$sampling_event)
 ```
 
-And the third component returns a data frame of raw data.
+And the third component returns a data frame of raw data.\
+**data**
+
 ```{r data_raw, eval=TRUE, echo=TRUE, results='markup'}
-dplyr::glimpse(dat$data)
+str(dat$data)
 ```
 
-## Using *export_xls()*
-The *export_xls()* function uses *import_xls()* to read the Excel workbooks into R, then exports the components returned by *import_xls()* to tables in the SEUG LTVMP database.
-This function imports the Excel workbooks and writes the data to the database, it does not return an object to R.
-This function requires five arguments and there are two options arguments:
-1. my_xls - The full path name to the Excel file.
-2. my_db - The name of the database object.
-3. data_table - The name of the data table in the database.
-4. sampling_event_table - The name of the sampling event table in the database.
-5. import_table - The name of the import log table in the database.
-6. verbose - Optional. Prints messages to the console showing function progress. Default is TRUE. If FALSE, messages are suppressed.
-7. view - Optional. Prints data to console before writing them to the database. Default is TRUE. If FALSE, data are not printed and there is no prompt before writing data to the database.
+## Exporting Data to the Database
+
+The *export_xls()* function uses *import_xls()* to read the Excel workbooks into R, then exports the components returned by *import_xls()* to tables in the database.
 
 ### Connecting to a Database
 
+First, se need to connect R to the SEUG LTVMP database.
+If you haven't connected the database with R before you will need to add it to Windows ODBC Data Sources:\
+1.
+Search "ODBC" on the Windows Start page and open ODBC Data Sources (64-bit).\
+2.
+Under the *User DSN* tab, click the 'Add' button and follow the prompts to connect the database.\
+3.
+Here's a helpful document with detailed instructions: <https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/open-the-odbc-data-source-administrator>\
 
-### Processing Excel Files
-Let's use *export_xls()*. 
-For this exercise we'll let the function print messages and view the data.
-```{r export_xls_show, eval=FALSE, echo=TRUE, results='markup'}
-export_xls(file_list[1], 
-           my_db = my_db,
-           data_table = "tblData_FreqCov",
-           sampling_event_table = "tblSamplingEvent",
-           import_table = "tblImportRecord")
+Again, there is an example database included with this package that we'll be using for the vignette.
+We'll be using the RODBC package to connect the access database to R.
+
+```{r internal_DB, eval=TRUE, echo=FALSE, warning=FALSE, message=FALSE}
+db_dir <- "C:/Users/mvanscoyoc/Documents/R/dataprocessR/exec"
+db_name <- "example_db.accdb"
+my_db <- RODBC::odbcConnectAccess2007(paste(db_dir, db_name, sep = "/"))
 ```
-```{r export_xls, eval=TRUE, echo=FALSE, results='markup'}
-export_xls(file_list[1], 
+
+```{r connect_DB, eval=FALSE, echo=TRUE, results='markup'}
+db_dir <- system.file("extdata", package = "dataprocessR")
+db_name <- "example_db.accdb"
+my_db <- RODBC::odbcConnectAccess2007(paste(db_dir, db_name, sep = "/"))
+```
+
+### Processing Excel Workbooks
+
+First, let's assign the names of the tables in the database to objects in the R work space to simplify our code a little.
+
+```{r table_names, eval=TRUE, echo=TRUE, results='markup'}
+data_table = "tblData"
+sampling_event_table = "tblSamplingEvent"
+import_table = "tblImportRecord"
+```
+
+Now there's only one place to change the names of the tables if we need to do that in future.
+
+The *export_xls()* function uses *import_xls()* to read the data in the workbooks into R, then exports them to the database.
+This function relies on RODBC package to write the data to the database; it does not return an R object.
+This function requires five arguments and there are two optional arguments:\
+1.
+**my_xls** - The full path name to the Excel file.\
+2.
+**my_db** - The name of the database object.\
+3.
+**data_table** - The name of the data table in the database.\
+4.
+**sampling_event_table** - The name of the sampling event table in the database.\
+5.
+**import_table** - The name of the import log table in the database.\
+6.
+**verbose** - Optional.
+Prints messages to the console showing function progress.
+Default is TRUE.
+If FALSE, messages are suppressed.\
+7.
+**view** - Optional.
+Prints data to console before writing them to the database.
+Default is TRUE.
+If FALSE, data are not printed and there is no prompt before writing data to the database.
+
+For this exercise we'll let the function print messages and suppress viewing the data.
+Viewing can be useful if you want to visually examine the data before writing them to the database.
+
+```{r export_xls_show, eval=FALSE, echo=FALSE, results='markup'}
+export_xls(veg_files[1], 
            my_db = my_db,
-           data_table = "tblData_FreqCov",
-           sampling_event_table = "tblSamplingEvent",
-           import_table = "tblImportRecord", 
+           data_table = data_table,
+           sampling_event_table = sampling_event_table,
+           import_table = import_table, 
+           view = FALSE)
+```
+
+```{r export_xls, eval=TRUE, echo=TRUE, results='markup'}
+export_xls(veg_files[1], 
+           my_db = my_db,
+           data_table = data_table,
+           sampling_event_table = sampling_event_table,
+           import_table = import_table, 
            verbose = TRUE, view = FALSE)
 ```
 
+That's it.
+The data have been exported to the database.
 
+### Processing All Excel Data in a Folder
 
+Processing one file at a time is time consuming and inefficient.
+The *lapply()* function can be used to iterate *export_xls()* through all the Excel files in a folder.
+
+```{r process_directory, eval=TRUE, echo=TRUE, results='markup'}
+lapply(veg_files[2:length(veg_files)], function(this_xls){
+  export_xls(my_xls = this_xls, 
+             my_db = my_db,
+             data_table = data_table,
+             sampling_event_table = sampling_event_table,
+             import_table = import_table, 
+             verbose = TRUE, view = FALSE)
+})
+```
+
+## Checking Exported Data
+
+Let's take a look at the database tables now that we've exported all the data.
+
+**`r import_table`**
+
+```{r import_table, eval=TRUE, echo=TRUE, results='markup'}
+dplyr::glimpse(RODBC::sqlFetch(my_db, import_table, 
+                               stringsAsFactors = F))
+```
+
+**`r sampling_event_table`**
+
+```{r sample_event_table, eval=TRUE, echo=TRUE, results='markup'}
+dplyr::glimpse(RODBC::sqlFetch(my_db, sampling_event_table,
+                               stringsAsFactors = F))
+```
+
+**`r data_table`**
+
+```{r data_table, eval=TRUE, echo=TRUE, results='markup'}
+head(RODBC::sqlFetch(my_db, data_table, stringsAsFactors = F))
+```
+
+# Weather Data
+Here we use the raindancer package to import and summarize the weather data that is collected at the SEUG LTVMP plots. 
