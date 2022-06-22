@@ -12,9 +12,9 @@
 #' @param sampling_event_table A character string of the name of the sampling
 #'     event table.
 #' @param import_table A character string of the name of the import log.
-#' @param verbose Optional Prints messages to the console showing function
+#' @param verbose Optional. Prints messages to the console showing function
 #'     progress. Default is TRUE. If FALSE, messages are suppressed.
-#' @param view Optional Prints data to console before writing them to the
+#' @param view Optional. Prints data to console before writing them to the
 #'     database. Default is TRUE. If FALSE, data are not printed and there is no
 #'     prompt before writing data to the database.
 #'

@@ -35,10 +35,10 @@ temperature and relative humidity data table.}
 \item{details_table}{A character string of the name of the logger details
 table.}
 
-\item{verbose}{Logical. Show messages showing progress. Default is TRUE. If
-FALSE, messages are suppressed.}
+\item{verbose}{Optional. Prints messages to the console showing function
+progress. Default is TRUE. If FALSE, messages are suppressed.}
 
-\item{view}{Logical. Prints data to console before writing them to the
+\item{view}{Optional. Prints data to console before writing them to the
 database. Default is TRUE. If FALSE, data are not printed and there is no
 prompt before writing data to the database.}
 }

@@ -16,8 +16,8 @@
 #'     temperature and relative humidity data table.
 #' @param details_table A character string of the name of the logger details
 #'     table.
-#' @param verbose Optional. Show messages showing progress. Default is TRUE. If
-#'     FALSE, messages are suppressed.
+#' @param verbose Optional. Prints messages to the console showing function
+#'     progress. Default is TRUE. If FALSE, messages are suppressed.
 #' @param view Optional. Prints data to console before writing them to the
 #'     database. Default is TRUE. If FALSE, data are not printed and there is no
 #'     prompt before writing data to the database.

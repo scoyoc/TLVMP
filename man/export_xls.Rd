@@ -28,10 +28,10 @@ event table.}
 
 \item{import_table}{A character string of the name of the import log.}
 
-\item{verbose}{Logical. Show messages showing progress. Default is TRUE. If
-FALSE, messages are suppressed.}
+\item{verbose}{Optional. Prints messages to the console showing function
+progress. Default is TRUE. If FALSE, messages are suppressed.}
 
-\item{view}{Logical. Prints data to console before writing them to the
+\item{view}{Optional. Prints data to console before writing them to the
 database. Default is TRUE. If FALSE, data are not printed and there is no
 prompt before writing data to the database.}
 }
@@ -39,11 +39,13 @@ prompt before writing data to the database.}
 Data is written to database tables. Objects are not returned.
 }
 \description{
-Export LTVMP data to database
+This function uses \code{\link{import_xls}} to read the Excel workbooks into
+R, then exports the components returned by \code{\link{import_xls}} to
+tables in the SEUG LTVMP database.
 }
 \details{
 This function uses \code{\link{import_xls}} to import LTVMP data
-into R and then export it to a conected Microsoft Access database.
+into R and then export it to a connected Microsoft Access database.
 }
 \examples{
 \dontrun{
@@ -59,9 +61,9 @@ file_list <- list.files(my_dir, pattern = ".xls", full.names = TRUE,
 
 # Process file and save to database
 export_xls(my_xls = file_list[1], my_db = my_db,
-            data_table = "tblData_FreqCov",
-            sampling_event_table = "tblSamplingEvent",
-            import_table = "tblImportRecord")
+           data_table = "tblData_FreqCov",
+           sampling_event_table = "tblSamplingEvent",
+           import_table = "tblImportRecord")
 }
 }
 \seealso{

@@ -10,3 +10,5 @@
 /exec
 /*.Rproj
 inst/doc
+/doc/
+/Meta/
