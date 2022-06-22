@@ -11,6 +11,8 @@ output:
   pdf_document:
     toc: true
     number_sections: true
+mainfont: Arial
+urlcolor: blue
 ---
 
 ```{r true_setup, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}

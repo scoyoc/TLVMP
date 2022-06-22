@@ -12,6 +12,8 @@ vignette: >
   %\VignetteIndexEntry{dataprocessR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+mainfont: Arial
+urlcolor: blue
 ---
 
 ```{r true_setup, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
