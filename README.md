@@ -27,7 +27,7 @@ Documentation: [Vignette](https://github.com/scoyoc/dataprocessR/blob/master/doc
 ## Installation
 
 ``` r
-devtools::install_github("scoyoc/dataprocessR")
+devtools::install_github("scoyoc/dataprocessR", build_vignettes = TRUE)
 ```
 
 ## Examples
