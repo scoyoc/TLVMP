@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+<meta name="date" content="2022-06-22" />
+
+<title>Process Southeast Utah Group Long-term Vegetation Monitoring Data</title>
+
+<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Process Southeast Utah Group Long-term Vegetation Monitoring Data</h1>
+<h4 class="author">Matthew Van Scoyoc</h4>
+<address class="author_afil">
+<div class="line-block">NPS Southeast Utah Group Parks<br />
+2282 Resource Blvd<br />
+Moab, Utah</div><br><h4 class="date">June 22, 2022</h4>
+
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>This package processes plant and ground cover data collected in the field and exports them to the Southeast Utah Group (SEUG) Long-term Vegetation Monitoring Program (LTVMP) database. Plant cover and frequency and ground cover data are collected in the field using paper datasheets, then transcribed into Excel workbooks. This package imports the workbook files into R, restructures the data, then exports them to the database. Onset data loggers collect temperature, relative humidity, and precipitation data that are exported to comma delimited files (csv) using the HOBOware application from Onset. The <a href="https://github.com/scoyoc/raindancer">raindancer</a> package is used to import these data into R and summarize them. This package then exports the processed data to the database.</p>
+</div>
+<div id="installation" class="section level1">
+<h1>Installation</h1>
+<p>This package is available on <a href="https://github.com/">GitHub</a> at <a href="https://github.com/scoyoc/dataprocessR" class="uri">https://github.com/scoyoc/dataprocessR</a>. Dependent packages include dplyr, glue, lubridate, raindancer, RODBC, stringr, tibble, and tidyr. Suggested packages include knitr and rmarkdown.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install the devtools package</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="st">&quot;devtools&quot;</span> <span class="sc">%in%</span> <span class="fu">installed.packages</span>()[, <span class="st">&quot;Package&quot;</span>]) {</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># install.packages(&quot;devtools&quot;)</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Install dataprocessR</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;scoyoc/dataprocessR&quot;</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;dataprocessR&quot;</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Install raindancer</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;scoyoc/raindancer&quot;</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;raindancer&quot;</span>)</span></code></pre></div>
+</div>
+<div id="connecting-to-a-database" class="section level1">
+<h1>Connecting to a Database</h1>
+<p>First, we need to connect R to a database. If you haven’t connected a database to R before you might need to add it to Windows ODBC Data Sources:<br />
+1. Search “ODBC” on the Windows Start page and open “ODBC Data Sources (64-bit).”<br />
+2. Under the ‘User DSN’ tab, click the ‘Add’ button and follow the prompts to connect the database.<br />
+3. Here’s a helpful document with detailed instructions: <a href="https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/open-the-odbc-data-source-administrator" class="uri">https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/open-the-odbc-data-source-administrator</a><br />
+</p>
+<p>There is an example database included with this package that we’ll be using for the vignette. We’ll be using the RODBC package to connect the database to R.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dat_dir <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="at">package =</span> <span class="st">&quot;dataprocessR&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>db_name <span class="ot">&lt;-</span> <span class="st">&quot;example_db.accdb&quot;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>my_db <span class="ot">&lt;-</span> RODBC<span class="sc">::</span><span class="fu">odbcConnectAccess2007</span>(<span class="fu">paste</span>(dat_dir, db_name, <span class="at">sep =</span> <span class="st">&quot;/&quot;</span>))</span></code></pre></div>
+<div id="file-paths" class="section level2">
+<h2>File Paths</h2>
+<p>The functions included in this package require full path names to data files. For this vignette we will use <em>system.file()</em> to extract the full path name to data included with the package. In your own work, replace the <em>system.file()</em> line with the path to your data (e.g., “C:/path/to/data”).</p>
+</div>
+</div>
+<div id="plant-cover-and-frequency-and-ground-cover-data" class="section level1">
+<h1>Plant Cover and Frequency and Ground Cover Data</h1>
+<p>Paper datasheets are used to record field data. The data are then transcribed into Excel workbooks back in the office. The paper datasheets are easy and cost effective way to collect field data and have proven to be valuable references when questions about plant data arise. The Excel workbooks are effective ways for field technicians to enter and check data back in the office, but the layout of the spreadsheets are not conducive for data analysis. This package imports the data in the Excel workbooks into R, restructures the data, then exports them to the SEUG LTVMP database.</p>
+<div id="importing-excel-workbooks-into-r" class="section level2">
+<h2>Importing Excel Workbooks into R</h2>
+<p>The <em>import_xls()</em> function imports data from the Excel workbooks into R. The function requires the full path name to the Excel workbook. Lets start by using <em>list.files()</em> to read a list of Excel files into R. There are example Excel iles included in this package.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>veg_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> dat_dir, <span class="at">pattern =</span> <span class="st">&quot;.xls&quot;</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">recursive =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">basename</span>(veg_files))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Veg_A03_2020.xls&quot; &quot;Veg_A05_2020.xls&quot; &quot;Veg_A06_2020.xls&quot; &quot;Veg_A08_2020.xls&quot;</span></span></code></pre></div>
+<p>Now that we have a list of full path names to the Excel files we can read them into R using the <em>import_xls()</em> function.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">import_xls</span>(<span class="st">&quot;C:/path/to/data&quot;</span>)</span></code></pre></div>
+<p>The function returns a list with three components:<br />
+1. <strong>file_info</strong> is information about the Excel file.<br />
+2. <strong>sampling_event</strong> is information about the sampling event.<br />
+3. <strong>data</strong> is a data frame of plant cover and frequency and ground cover data.</p>
+<p>Let’s start with the first file.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">import_xls</span>(veg_files[<span class="dv">1</span>])</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">&quot;class = &quot;</span>, <span class="fu">class</span>(dat)); <span class="fu">paste</span>(<span class="st">&quot;length = &quot;</span>, <span class="fu">length</span>(dat)); <span class="fu">names</span>(dat)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;class =  list&quot;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;length =  3&quot;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;file_info&quot;      &quot;sampling_event&quot; &quot;data&quot;</span></span></code></pre></div>
+<p>Let’s examine the components of the list returned by the <em>import_xls()</em> function.</p>
+<p><strong>file_info</strong> is information about the Excel file.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dat<span class="sc">$</span>file_info)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &#39;data.frame&#39;:    1 obs. of  4 variables:</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ DataFile  : chr &quot;Veg_A03_2020.xls&quot;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ ImportDate: chr &quot;2022-06-22&quot;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ PlotID    : chr &quot;A03&quot;</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ SampleYear: int 2020</span></span></code></pre></div>
+<p><strong>sampling_event</strong> is information about the sampling event.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dat<span class="sc">$</span>sampling_event)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &#39;data.frame&#39;:    1 obs. of  4 variables:</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ SampleYear: int 2020</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ PlotID    : chr &quot;A03&quot;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ SampleDate: chr &quot;2020-04-16&quot;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ Observers : chr &quot;Josh Doucette;Morgan Cannon;Kenna Ryan&quot;</span></span></code></pre></div>
+<p><strong>data</strong> is a data frame of raw data.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dat<span class="sc">$</span>data)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tibble [661 x 7] (S3: tbl_df/tbl/data.frame)</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ Key       : chr [1:661] &quot;2020.A03.1.CRUSTAGE&quot; &quot;2020.A03.1.GRAVEL&quot; &quot;2020.A03.1.LITTER&quot; &quot;2020.A03.1.BROTEC&quot; ...</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ SampleYear: int [1:661] 2020 2020 2020 2020 2020 2020 2020 2020 2020 2020 ...</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ PlotID    : chr [1:661] &quot;A03&quot; &quot;A03&quot; &quot;A03&quot; &quot;A03&quot; ...</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ Quad      : int [1:661] 1 1 1 1 1 1 1 1 2 2 ...</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ SppCode   : chr [1:661] &quot;CRUSTAGE&quot; &quot;GRAVEL&quot; &quot;LITTER&quot; &quot;BROTEC&quot; ...</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ F         : int [1:661] 2 1 1 1 3 3 1 3 4 1 ...</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ C         : int [1:661] NA 1 5 1 1 1 2 1 NA 1 ...</span></span></code></pre></div>
+</div>
+<div id="exporting-data-to-the-database" class="section level2">
+<h2>Exporting Data to the Database</h2>
+<p>The <em>export_xls()</em> function uses <em>import_xls()</em> to read the Excel workbooks into R, then exports the components returned by <em>import_xls()</em> to separate tables in the database.</p>
+<p>First, let’s assign the names of the tables in the database to objects in the R work space to simplify our code.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>veg_data_table <span class="ot">=</span> <span class="st">&quot;tblData&quot;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>veg_sampling_event_table <span class="ot">=</span> <span class="st">&quot;tblSamplingEvent&quot;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>veg_import_table <span class="ot">=</span> <span class="st">&quot;tblImportRecord&quot;</span></span></code></pre></div>
+<p>Now there’s one place in our R script to change the table names.</p>
+<p>The <em>export_xls()</em> function uses <em>import_xls()</em> to read the data in the workbooks into R, then exports them to the database. This function relies on RODBC package to write the data to the database; it does not return an R object. This function requires five arguments and there are two optional arguments:<br />
+1. <strong>my_xls</strong> - The full path name to the Excel file.<br />
+2. <strong>my_db</strong> - The name of the database object in R.<br />
+3. <strong>data_table</strong> - The name of the plant cover and frequency and ground cover data table in the database.<br />
+4. <strong>sampling_event_table</strong> - The name of the sampling event table in the database.<br />
+5. <strong>import_table</strong> - The name of the Excel file import log table in the database.<br />
+6. <strong>verbose</strong> - Optional. Prints messages to the console showing function progress. Default is TRUE. If FALSE, messages are suppressed.<br />
+7. <strong>view</strong> - Optional. Prints data to console before writing them to the database. Default is TRUE. If FALSE, data are not printed and there is no prompt before writing data to the database.</p>
+<p>For this exercise we’ll let the function print messages and suppress viewing the data. Viewing can be useful if you want to visually examine the data before writing them to the database.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">export_xls</span>(veg_files[<span class="dv">1</span>], </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">my_db =</span> my_db,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">data_table =</span> veg_data_table,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">sampling_event_table =</span> veg_sampling_event_table,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">import_table =</span> veg_import_table, </span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">verbose =</span> <span class="cn">TRUE</span>, <span class="at">view =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Processing Veg_A03_2020.xls</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing data to database</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing sampling event to database</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing import log to database</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span></code></pre></div>
+<p>That’s it. The data have been exported to the database.</p>
+<p>Processing one file at a time is time consuming and inefficient. The <em>lapply()</em> function can be used to iterate <em>export_xls()</em> through all the Excel files in a folder.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(veg_files[<span class="dv">2</span><span class="sc">:</span><span class="fu">length</span>(veg_files)], <span class="cf">function</span>(this_xls){</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">export_xls</span>(<span class="at">my_xls =</span> this_xls, </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">my_db =</span> my_db,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">data_table =</span> veg_data_table,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">sampling_event_table =</span> veg_sampling_event_table,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">import_table =</span> veg_import_table, </span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">verbose =</span> <span class="cn">TRUE</span>, <span class="at">view =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Processing Veg_A05_2020.xls</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing data to database</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing sampling event to database</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing import log to database</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Processing Veg_A06_2020.xls</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing data to database</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing sampling event to database</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing import log to database</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Processing Veg_A08_2020.xls</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing data to database</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing sampling event to database</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing import log to database</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[3]]</span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span></code></pre></div>
+<p>Let’s take a look at the database tables now that we’ve exported all of the plant anc ground cover data.</p>
+<p><strong>tblImportRecord</strong> is a log of Excel files imported to the database.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(RODBC<span class="sc">::</span><span class="fu">sqlFetch</span>(my_db, veg_import_table, </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">stringsAsFactors =</span> F))</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Rows: 4</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: 4</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ DataFile   &lt;chr&gt; &quot;Veg_A03_2020.xls&quot;, &quot;Veg_A05_2020.xls&quot;, &quot;Veg_A06_2020.xls&quot;,~</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ ImportDate &lt;chr&gt; &quot;2022-06-22&quot;, &quot;2022-06-22&quot;, &quot;2022-06-22&quot;, &quot;2022-06-22&quot;</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ PlotID     &lt;chr&gt; &quot;A03&quot;, &quot;A05&quot;, &quot;A06&quot;, &quot;A08&quot;</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ SampleYear &lt;int&gt; 2020, 2020, 2020, 2020</span></span></code></pre></div>
+<p><strong>tblSamplingEvent</strong> is a log of vegetation plot sampling events.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(RODBC<span class="sc">::</span><span class="fu">sqlFetch</span>(my_db, veg_sampling_event_table,</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">stringsAsFactors =</span> F))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Rows: 4</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: 4</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ SampleYear &lt;int&gt; 2020, 2020, 2020, 2020</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ PlotID     &lt;chr&gt; &quot;A03&quot;, &quot;A05&quot;, &quot;A06&quot;, &quot;A08&quot;</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ SampleDate &lt;chr&gt; &quot;2020-04-16&quot;, &quot;2020-04-13&quot;, &quot;2020-04-15&quot;, &quot;2020-04-16&quot;</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ Observers  &lt;chr&gt; &quot;Josh Doucette;Morgan Cannon;Kenna Ryan&quot;, &quot;Morgan Cannon;Fa~</span></span></code></pre></div>
+<p><strong>tblData</strong> is a table of raw plant and ground cover data.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(RODBC<span class="sc">::</span><span class="fu">sqlFetch</span>(my_db, veg_data_table, <span class="at">stringsAsFactors =</span> F))</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                   Key SampleYear PlotID Quad  SppCode F  C</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 2020.A03.1.CRUSTAGE       2020    A03    1 CRUSTAGE 2 NA</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2   2020.A03.1.GRAVEL       2020    A03    1   GRAVEL 1  1</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3   2020.A03.1.LITTER       2020    A03    1   LITTER 1  5</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4   2020.A03.1.BROTEC       2020    A03    1   BROTEC 1  1</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5   2020.A03.1.SPOCRY       2020    A03    1   SPOCRY 3  1</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6   2020.A03.1.HELPET       2020    A03    1   HELPET 3  1</span></span></code></pre></div>
+</div>
+</div>
+<div id="weather-data" class="section level1">
+<h1>Weather Data</h1>
+<p>Weather data are collected in the field at the SEUG LTVMP plots using Onset loggers. These data are exported to comma delimited (csv) files using the Onset HOBOware application. The <a href="https://github.com/scoyoc/raindancer">raindancer</a> package is used to import these data into R and summarize them. See the <a href="https://github.com/scoyoc/raindancer/blob/master/doc/raindancer_pdf.pdf">raindancer vignette</a> for a detailed description of package. This package, dataprocessR, then exports the data to the database using <em>export_hobo()</em>.<br />
+</p>
+<p>First, let’s pull a list of files into R. Several example csv files are included with this package.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>wx_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> dat_dir, <span class="at">pattern =</span> <span class="st">&quot;.csv&quot;</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">recursive =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">basename</span>(wx_files))</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;20200415_A05_PRCP.csv&quot;    &quot;20200415_A05_TEMP.csv&quot;   </span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] &quot;20200415_A06_PRCP.csv&quot;    &quot;20200415_A06_Temp.csv&quot;   </span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5] &quot;20200416_A03_PRCP.csv&quot;    &quot;20200416_A03_TEMP_RH.csv&quot;</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [7] &quot;20200416_A08_PRCP.csv&quot;    &quot;20200416_A08_TEMP_RH.csv&quot;</span></span></code></pre></div>
+<p>And let’s assign table names again to simplify our code.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set table names</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>wx_import_table <span class="ot">=</span> <span class="st">&quot;tblWxImportLog&quot;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>wx_raw_data_table <span class="ot">=</span> <span class="st">&quot;tblWxData_raw&quot;</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>wx_prcp_data_table <span class="ot">=</span> <span class="st">&quot;tblWxData_PRCP&quot;</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>wx_temp_rh_data_table <span class="ot">=</span> <span class="st">&quot;tblWxData_TEMP_RH&quot;</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>wx_details_table <span class="ot">=</span> <span class="st">&quot;tblWxLoggerDetails&quot;</span></span></code></pre></div>
+<p>Now let’s use <em>export_hobo()</em> to write these data to the database. Like <em>export_xls()</em>, this function relies on RODBC package to write the data to the database and it does not return an R object. This function requires seven arguments and has two optional arguments:<br />
+1. <strong>my_file</strong> - The full path name to the csv file.<br />
+2. <strong>my_db</strong> - The name of the database object in R.<br />
+3. <strong>import_table</strong> - The name of the csv file import log table in the database.<br />
+4. <strong>raw_data_table</strong> - The name of the raw weather data table in the database.<br />
+5. <strong>prcp_data_table</strong> - The name of the summarized precipitation data table in the database.<br />
+6. <strong>temp_rh_data_table</strong> - The name of the summarized temperature and relative humidity data table in the database.<br />
+7. <strong>details_table</strong> - The name of the logger settings log table in the database.<br />
+8. <strong>verbose</strong> - Optional. Prints messages to the console showing function progress. Default is TRUE. If FALSE, messages are suppressed.<br />
+8. <strong>view</strong> - Optional. Prints data to console before writing them to the database. Default is TRUE. If FALSE, data are not printed and there is no prompt before writing data to the database.</p>
+<p>Like before, we’ll let the function print messages and suppress viewing the data.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">export_hobo</span>(wx_files[<span class="dv">1</span>], </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">my_db =</span> my_db,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">import_table =</span> wx_import_table,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">raw_data_table =</span> wx_raw_data_table,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">prcp_data_table =</span> wx_prcp_data_table,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">temp_rh_data_table =</span> wx_temp_rh_data_table,</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">details_table =</span> wx_details_table,</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">verbose =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">view =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Processing 20200415_A05_PRCP.csv</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing raw data to database</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing processed data to database</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing logger details to database</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing import log to database</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span></code></pre></div>
+<p>And like before, we can improve our efficiency by using the <em>lapply()</em> function to iterate <em>export_hobo()</em> through all csv files in a folder.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(wx_files[<span class="dv">2</span><span class="sc">:</span><span class="fu">length</span>(wx_files)], <span class="cf">function</span>(this_file){</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">export_hobo</span>(this_file, </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">my_db =</span> my_db,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">import_table =</span> wx_import_table,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">raw_data_table =</span> wx_raw_data_table,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">prcp_data_table =</span> wx_prcp_data_table,</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">temp_rh_data_table =</span> wx_temp_rh_data_table,</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>              <span class="at">details_table =</span> wx_details_table,</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>              <span class="at">verbose =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">view =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Processing 20200415_A05_TEMP.csv</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing raw data to database</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing processed data to database</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing logger details to database</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing import log to database</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Processing 20200415_A06_PRCP.csv</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing raw data to database</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing processed data to database</span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing logger details to database</span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing import log to database</span></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Processing 20200415_A06_Temp.csv</span></span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing raw data to database</span></span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing processed data to database</span></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing logger details to database</span></span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing import log to database</span></span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Processing 20200416_A03_PRCP.csv</span></span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing raw data to database</span></span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing processed data to database</span></span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing logger details to database</span></span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing import log to database</span></span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Processing 20200416_A03_TEMP_RH.csv</span></span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing raw data to database</span></span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing processed data to database</span></span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing logger details to database</span></span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing import log to database</span></span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Processing 20200416_A08_PRCP.csv</span></span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing raw data to database</span></span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing processed data to database</span></span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing logger details to database</span></span>
+<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing import log to database</span></span>
+<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Processing 20200416_A08_TEMP_RH.csv</span></span>
+<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing raw data to database</span></span>
+<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing processed data to database</span></span>
+<span id="cb18-45"><a href="#cb18-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing logger details to database</span></span>
+<span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Writing import log to database</span></span>
+<span id="cb18-47"><a href="#cb18-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb18-48"><a href="#cb18-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span>
+<span id="cb18-49"><a href="#cb18-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-50"><a href="#cb18-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb18-51"><a href="#cb18-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span>
+<span id="cb18-52"><a href="#cb18-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-53"><a href="#cb18-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[3]]</span></span>
+<span id="cb18-54"><a href="#cb18-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span>
+<span id="cb18-55"><a href="#cb18-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-56"><a href="#cb18-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[4]]</span></span>
+<span id="cb18-57"><a href="#cb18-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span>
+<span id="cb18-58"><a href="#cb18-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-59"><a href="#cb18-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[5]]</span></span>
+<span id="cb18-60"><a href="#cb18-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span>
+<span id="cb18-61"><a href="#cb18-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-62"><a href="#cb18-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[6]]</span></span>
+<span id="cb18-63"><a href="#cb18-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span>
+<span id="cb18-64"><a href="#cb18-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-65"><a href="#cb18-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[7]]</span></span>
+<span id="cb18-66"><a href="#cb18-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span></code></pre></div>
+<p>Let’s take a look at the database tables now that we’ve exported all of the weather data.</p>
+<p>raw_data_table = “tblWxData_raw” prcp_data_table = “tblWxData_PRCP” temp_rh_data_table = “tblWxData_TEMP_RH”</p>
+<p><strong>tblWxImportLog</strong> is a log of csv files imported to the database.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(RODBC<span class="sc">::</span><span class="fu">sqlFetch</span>(my_db, wx_import_table, </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">stringsAsFactors =</span> F))</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Rows: 10</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: 11</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ FileName         &lt;chr&gt; &quot;20200415_A05_PRCP.csv&quot;, &quot;20200415_A05_TEMP.csv&quot;, &quot;20~</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ PlotID           &lt;chr&gt; &quot;A05&quot;, &quot;A05&quot;, &quot;A06&quot;, &quot;A06&quot;, &quot;A03&quot;, &quot;A03&quot;, &quot;A03&quot;, &quot;A08~</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ Element          &lt;chr&gt; &quot;PRCP&quot;, &quot;TEMP&quot;, &quot;PRCP&quot;, &quot;TEMP&quot;, &quot;PRCP&quot;, &quot;TEMP&quot;, &quot;RH&quot;,~</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ Product          &lt;chr&gt; &quot;HOBO UA-003-64 Pendant Temp/Event&quot;, &quot;HOBO UA-001-64 ~</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ SerialNumber     &lt;int&gt; 20551774, 20561144, 20551794, 20561146, 20551795, 205~</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ LaunchName       &lt;chr&gt; &quot;A05_PRCP&quot;, &quot;A05_TEMP&quot;, &quot;A06 PRCP&quot;, &quot;A06 Temp&quot;, &quot;A03_~</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ DeploymentNumber &lt;int&gt; 3, 3, 1, 1, 1, 1, 1, 1, 1, 1</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ LaunchTime       &lt;chr&gt; &quot;03/25/19 07:37:49 AM GMT-06:00&quot;, &quot;03/25/19 07:37:24 ~</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ FirstSampleTime  &lt;chr&gt; &quot;03/25/19 05:00:00 PM GMT-06:00&quot;, &quot;03/25/19 05:00:00 ~</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ LastSampleTime   &lt;chr&gt; &quot;07/31/19 07:17:23 PM GMT-06:00&quot;, &quot;10/31/19 03:00:00 ~</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ ImportDate       &lt;chr&gt; &quot;2022-06-22&quot;, &quot;2022-06-22&quot;, &quot;2022-06-22&quot;, &quot;2022-06-22~</span></span></code></pre></div>
+<p><strong>tblWxLoggerDetails</strong> is a log of logger settings.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(RODBC<span class="sc">::</span><span class="fu">sqlFetch</span>(my_db, wx_details_table, <span class="at">stringsAsFactors =</span> F))</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                FileName        Details                             Value</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 20200415_A05_PRCP.csv        Product HOBO UA-003-64 Pendant Temp/Event</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 20200415_A05_PRCP.csv  Serial Number                          20551774</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 20200415_A05_PRCP.csv Version Number                              1.17</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 20200415_A05_PRCP.csv   Manufacturer              Onset Computer Corp.</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 20200415_A05_PRCP.csv  Device Memory                             65536</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 20200415_A05_PRCP.csv Header Created    09/04/13 09:40:47 AM GMT-06:00</span></span></code></pre></div>
+<p><strong>tblWxData_PRCP</strong> is a table of summarized precipitation data.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(RODBC<span class="sc">::</span><span class="fu">sqlFetch</span>(my_db, wx_prcp_data_table, <span class="at">stringsAsFactors =</span> F))</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   PlotID            DateTime Element PRCP_mm Tips MaxTips_min</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1    A05 2019-03-25 00:00:00    PRCP       0    0           0</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2    A05 2019-03-25 01:00:00    PRCP       0    0           0</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3    A05 2019-03-25 02:00:00    PRCP       0    0           0</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4    A05 2019-03-25 03:00:00    PRCP       0    0           0</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5    A05 2019-03-25 04:00:00    PRCP       0    0           0</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6    A05 2019-03-25 05:00:00    PRCP       0    0           0</span></span></code></pre></div>
+<p><strong>tblWxData_TEMP_RH</strong> is a table of summarized temperature and relative humidity data.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(RODBC<span class="sc">::</span><span class="fu">sqlFetch</span>(my_db, wx_temp_rh_data_table, <span class="at">stringsAsFactors =</span> F))</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   PlotID                Date Element      Mean    Min    Max  n MinTime MaxTime</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1    A05 2019-03-25 00:00:00    TEMP 11.797786  7.381 16.713 14   23:30   17:00</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2    A05 2019-03-26 00:00:00    TEMP 10.977229  3.893 20.996 48   07:00   17:30</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3    A05 2019-03-27 00:00:00    TEMP 13.732958  6.166 21.187 48   06:30   15:30</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4    A05 2019-03-28 00:00:00    TEMP 15.678417 11.334 20.710 48   04:00   14:30</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5    A05 2019-03-29 00:00:00    TEMP  9.227063  4.934 12.787 48   23:30   15:00</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6    A05 2019-03-30 00:00:00    TEMP  6.445458  1.330 11.625 48   07:00   17:00</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   Units</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     F</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2     F</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3     F</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4     F</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5     F</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6     F</span></span></code></pre></div>
+<p><strong>tblWxData_raw</strong> is a table of the raw, not-summarized, weather data.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(RODBC<span class="sc">::</span><span class="fu">sqlFetch</span>(my_db, wx_raw_data_table, <span class="at">stringsAsFactors =</span> F))</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                FileName PlotID            DateTime Element Value Units</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 20200415_A05_PRCP.csv    A05 2019-03-25 17:00:00    PRCP     0 Event</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 20200415_A05_PRCP.csv    A05 2019-04-10 03:43:11    PRCP     1 Event</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 20200415_A05_PRCP.csv    A05 2019-04-10 04:17:37    PRCP     2 Event</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 20200415_A05_PRCP.csv    A05 2019-04-10 04:23:01    PRCP     3 Event</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 20200415_A05_PRCP.csv    A05 2019-04-10 04:30:08    PRCP     4 Event</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 20200415_A05_PRCP.csv    A05 2019-04-10 04:38:03    PRCP     5 Event</span></span></code></pre></div>
+<div id="troubleshooting-weather-data" class="section level2">
+<h2>Troubleshooting Weather Data</h2>
+<p>The structure of the csv files generated from HOBOware vary wildly. They can have anywhere from 4 to 10 columns and the logger details are usually in two “hidden” columns following the data. This makes data from the temperature, relative humidity, and precipitation data difficult to read into R. Below are some tips to troubleshoot the csv files when they fail to read into R correctly and <em>export_hobo()</em> fails.<br />
+</p>
+<ol style="list-style-type: decimal">
+<li>First open the *.csv file in a text editor and examine the data. Most of the time the data are simply invalid for some reason, it’s probably noted in the Field Notes. If this is the case, move the file to the “not processed” directory and move on.<br />
+</li>
+<li>If the data look valid, use the code below to find where a file is not reading in to R correctly. Sometimes this is fairly easy to fix in the *.csv, other times is a real bugger.<br />
+</li>
+</ol>
+<p><strong>More hints:</strong></p>
+<p>Files before 2020. A common bug in earlier *.csv files is when the logger name on line 13, “Launch Name”, has an apostrophe in it (e.g. Devil’s Garden). Remove the apostrophe and the file will read into R.</p>
+<p>Files 2020 and later. A common bug in more recent csv files, HoboWare does not write column names for the last two columns, Details and units. This error reports “more columns than column names”. Open the file and add column names to the last two columns of row two. The file should read into R smoothly.<br />
+</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">#-- Isolate file and begin troubleshooting</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>file_index <span class="ot">&lt;-</span> <span class="dv">11</span>                        <span class="co"># Index number of the trouble file. This number will change.</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>file_list[file_index]                   <span class="co"># Prints name of trouble file.</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>my_file <span class="ot">&lt;-</span> file_list[file_index]        <span class="co"># Assigns file path to R object.</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>raindancer<span class="sc">::</span><span class="fu">import_hobo</span>(my_file)   <span class="co"># Test raindancer function for error.</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="co">#-- Problems with parsing date-time</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="fu">read.table</span>(my_file, <span class="at">sep =</span> <span class="st">&quot;,&quot;</span>, <span class="at">skip =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> <span class="co"># skip argument may differ</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">tibble</span>() <span class="sc">|&gt;</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="st">&quot;DateTime&quot;</span> <span class="ot">=</span> V2) <span class="sc">|&gt;</span> <span class="co"># Variable name (V2) may differ</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="st">&quot;DateTime&quot;</span> <span class="ot">=</span> lubridate<span class="sc">::</span><span class="fu">parse_date_time</span>(DateTime, </span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>                                                        <span class="at">orders =</span> <span class="st">&quot;%m/%d/%y hh:mm&quot;</span>))</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="co">#-- Problems with csv file headers</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Play around with skip argument until csv read into R correctly</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="fu">read.csv</span>(my_file, <span class="at">skip =</span> <span class="dv">1</span>)  <span class="sc">|&gt;</span> tibble<span class="sc">::</span><span class="fu">tibble</span>() </span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>readr<span class="sc">::</span><span class="fu">read_csv</span>(my_file, <span class="at">skip =</span> <span class="dv">1</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)  <span class="sc">|&gt;</span> tibble<span class="sc">::</span><span class="fu">tibble</span>()</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a><span class="co">#-- Testing data summary functions</span></span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>raindancer<span class="sc">::</span><span class="fu">import_hobo</span>(my_file) <span class="sc">|&gt;</span> raindancer<span class="sc">::</span><span class="fu">raindance</span>(dat)</span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>raindancer<span class="sc">::</span><span class="fu">import_hobo</span>(my_file) <span class="sc">|&gt;</span> raindancer<span class="sc">::</span><span class="fu">sundance</span>(dat)</span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>raindancer<span class="sc">::</span><span class="fu">import_hobo</span>(file_list[file_index]) <span class="sc">|&gt;</span> raindancer<span class="sc">::</span><span class="fu">process_hobo</span>()</span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Continue processing files in directory after an invalid file breaks the </span></span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a><span class="co">#    lapply() is sorted out. </span></span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a><span class="co"># After troubleshooting the file that caused export_hobo() to  crash. </span></span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Change the number to the index of the next file and continue to process the </span></span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a><span class="co">#    rest of the files in the directory.</span></span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(file_list[file_index<span class="sc">:</span><span class="fu">length</span>(file_list)], <span class="cf">function</span>(this_file){</span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">export_hobo</span>(this_file, <span class="at">my_db =</span> my_db,</span>
+<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a>              <span class="at">import_table =</span> import_table,</span>
+<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a>              <span class="at">raw_data_table =</span> raw_data_table,</span>
+<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a>              <span class="at">prcp_data_table =</span> prcp_data_table,</span>
+<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a>              <span class="at">temp_rh_data_table =</span> temp_rh_data_table,</span>
+<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a>              <span class="at">details_table =</span> details_table, </span>
+<span id="cb24-37"><a href="#cb24-37" aria-hidden="true" tabindex="-1"></a>              <span class="at">view =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb24-38"><a href="#cb24-38" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
+</div>
+</div>
+<div id="reporting-errors-and-issues" class="section level1">
+<h1>Reporting Errors and Issues</h1>
+<p>Please submit any problems on the Issues page of this GitHub repository, <a href="https://github.com/scoyoc/dataprocessR/issues" class="uri">https://github.com/scoyoc/dataprocessR/issues</a>, or contact the author of the package if this happens.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
