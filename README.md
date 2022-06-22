@@ -22,7 +22,7 @@ License: MIT + file [LICENSE](https://github.com/scoyoc/dataprocessR/blob/master
 
 URL: [https://github.com/scoyoc/dataprocessR](https://github.com/scoyoc/dataprocessR)
 
-Documentation: Help pages for now. A Vignette is planned for future releases.
+Documentation: [Vignette](https://github.com/scoyoc/dataprocessR/blob/master/doc/dataprocessR_pdf.pdf) and man pages.
 
 ## Installation
 
