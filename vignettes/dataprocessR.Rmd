@@ -14,7 +14,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+```{r true_setup, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 library("raindancer")
 library("dataprocessR")
@@ -27,7 +27,7 @@ Plant cover and frequency and ground cover data are collected in the field using
 This package imports the workbook files into R, restructures the data, then exports them to the database.
 Onset data loggers collect temperature, relative humidity, and precipitation data that are exported to comma delimited files (\*.csv) using the HOBOware application from Onset.
 The [raindancer](https://github.com/scoyoc/raindancer) package is used to import these data into R and summarize them.
-This package then exports the processed data to the SEUG LTVMP database.
+This package then exports the processed data to the database.
 
 # Installation
 
@@ -35,7 +35,7 @@ This package is available on [GitHub](https://github.com/) at <https://github.co
 Dependent packages include dplyr, glue, lubridate, raindancer, RODBC, stringr, tibble, and tidyr.
 Suggested packages include knitr and rmarkdown.
 
-```{r Setup, eval=FALSE, echo = TRUE, results='markup'}
+```{r setup, eval=FALSE, echo = TRUE, results='markup'}
 # Install the devtools package
 if (!"devtools" %in% installed.packages()[, "Package"]) {
   install.packages("devtools")
@@ -50,13 +50,39 @@ devtools::install_github("scoyoc/raindancer")
 library("raindancer")
 ```
 
+# Connecting to a Database
+
+First, we need to connect R to a database.
+If you haven't connected a database with R before you might need to add it to Windows ODBC Data Sources:\
+1.
+Search "ODBC" on the Windows Start page and open "ODBC Data Sources (64-bit)."\
+2.
+Under the 'User DSN' tab, click the 'Add' button and follow the prompts to connect the database.\
+3.
+Here's a helpful document with detailed instructions: <https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/open-the-odbc-data-source-administrator>\
+
+There is an example database included with this package that we'll be using for the vignette.
+We'll be using the RODBC package to connect the database to R.
+
+```{r internal_DB, eval=TRUE, echo=FALSE, warning=FALSE, message=FALSE}
+db_dir <- "C:/Users/mvanscoyoc/Documents/R/dataprocessR/exec"
+db_name <- "example_db.accdb"
+my_db <- RODBC::odbcConnectAccess2007(paste(db_dir, db_name, sep = "/"))
+```
+
+```{r connect_db, eval=FALSE, echo=TRUE, results='markup'}
+db_dir <- system.file("extdata", package = "dataprocessR")
+db_name <- "example_db.accdb"
+my_db <- RODBC::odbcConnectAccess2007(paste(db_dir, db_name, sep = "/"))
+```
+
 # Plant and Ground Cover and Frequency Data
 
 Paper datasheets are used to collect field data.
-The data are then transcribed into Excel workbooks.
-The paper datasheets are easy and cost effective way to collect field data and have proven to be valuable references when questions about cover data arise.
+The data are then transcribed into Excel workbooks back in the office.
+The paper datasheets are easy and cost effective way to collect field data and have proven to be valuable references when questions about plant data arise.
 The Excel workbooks are effective ways for field technicians to enter and check data back in the office, but the layout of the spreadsheets are not conducive for data analysis.
-This package imports the data in the Excel workbook into R, restructures the data, then exports them to the SEUG LTVMP database.
+This package imports the data in the Excel workbooks into R, restructures the data, then exports them to the SEUG LTVMP database.
 
 ## Importing Excel Workbooks into R
 
@@ -71,7 +97,7 @@ veg_files <- list.files(path = "C:/path/to/data", pattern = ".xls",
 
 There are some files included in this package for examples, so we'll use these for this vignette.
 
-```{r import, eval=TRUE, echo=TRUE, results='markup'}
+```{r veg_files, eval=TRUE, echo=TRUE, results='markup'}
 veg_files <- list.files(path = system.file("extdata", package = "dataprocessR"),
                         pattern = ".xls", full.names = TRUE, recursive = FALSE)
 print(veg_files)
@@ -118,39 +144,11 @@ str(dat$data)
 
 ## Exporting Data to the Database
 
-The *export_xls()* function uses *import_xls()* to read the Excel workbooks into R, then exports the components returned by *import_xls()* to tables in the database.
+The *export_xls()* function uses *import_xls()* to read the Excel workbooks into R, then exports the components returned by *import_xls()* to separate tables in the database.
 
-### Connecting to a Database
+First, let's assign the names of the tables in the database to objects in the R work space to simplify our code.
 
-First, se need to connect R to the SEUG LTVMP database.
-If you haven't connected the database with R before you will need to add it to Windows ODBC Data Sources:\
-1.
-Search "ODBC" on the Windows Start page and open ODBC Data Sources (64-bit).\
-2.
-Under the *User DSN* tab, click the 'Add' button and follow the prompts to connect the database.\
-3.
-Here's a helpful document with detailed instructions: <https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/open-the-odbc-data-source-administrator>\
-
-Again, there is an example database included with this package that we'll be using for the vignette.
-We'll be using the RODBC package to connect the access database to R.
-
-```{r internal_DB, eval=TRUE, echo=FALSE, warning=FALSE, message=FALSE}
-db_dir <- "C:/Users/mvanscoyoc/Documents/R/dataprocessR/exec"
-db_name <- "example_db.accdb"
-my_db <- RODBC::odbcConnectAccess2007(paste(db_dir, db_name, sep = "/"))
-```
-
-```{r connect_DB, eval=FALSE, echo=TRUE, results='markup'}
-db_dir <- system.file("extdata", package = "dataprocessR")
-db_name <- "example_db.accdb"
-my_db <- RODBC::odbcConnectAccess2007(paste(db_dir, db_name, sep = "/"))
-```
-
-### Processing Excel Workbooks
-
-First, let's assign the names of the tables in the database to objects in the R work space to simplify our code a little.
-
-```{r table_names, eval=TRUE, echo=TRUE, results='markup'}
+```{r veg_tables, eval=TRUE, echo=TRUE, results='markup'}
 data_table = "tblData"
 sampling_event_table = "tblSamplingEvent"
 import_table = "tblImportRecord"
@@ -185,15 +183,6 @@ If FALSE, data are not printed and there is no prompt before writing data to the
 For this exercise we'll let the function print messages and suppress viewing the data.
 Viewing can be useful if you want to visually examine the data before writing them to the database.
 
-```{r export_xls_show, eval=FALSE, echo=FALSE, results='markup'}
-export_xls(veg_files[1], 
-           my_db = my_db,
-           data_table = data_table,
-           sampling_event_table = sampling_event_table,
-           import_table = import_table, 
-           view = FALSE)
-```
-
 ```{r export_xls, eval=TRUE, echo=TRUE, results='markup'}
 export_xls(veg_files[1], 
            my_db = my_db,
@@ -206,12 +195,10 @@ export_xls(veg_files[1],
 That's it.
 The data have been exported to the database.
 
-### Processing All Excel Data in a Folder
-
 Processing one file at a time is time consuming and inefficient.
 The *lapply()* function can be used to iterate *export_xls()* through all the Excel files in a folder.
 
-```{r process_directory, eval=TRUE, echo=TRUE, results='markup'}
+```{r process_veg_dir, eval=TRUE, echo=TRUE, results='markup'}
 lapply(veg_files[2:length(veg_files)], function(this_xls){
   export_xls(my_xls = this_xls, 
              my_db = my_db,
@@ -221,8 +208,6 @@ lapply(veg_files[2:length(veg_files)], function(this_xls){
              verbose = TRUE, view = FALSE)
 })
 ```
-
-## Checking Exported Data
 
 Let's take a look at the database tables now that we've exported all the data.
 
@@ -247,4 +232,149 @@ head(RODBC::sqlFetch(my_db, data_table, stringsAsFactors = F))
 ```
 
 # Weather Data
-Here we use the raindancer package to import and summarize the weather data that is collected at the SEUG LTVMP plots. 
+
+Weather data are collected in the field at the SEUG LTVMP plots using Onset loggers.
+These data are exported to comma delimited (csv) files using the Onset HOBOware application.
+The [raindancer](https://github.com/scoyoc/raindancer) package is used to import these data into R and summarize them.
+See the [raindancer vignette](https://github.com/scoyoc/raindancer/blob/master/doc/raindancer_pdf.pdf) for a detailed description of package.
+This package, dataprocessR, then exports the data to the database using *export_hobo()*.\
+
+First, let's pull a list of files into R.
+We'll use the example data included with the raindancer package.
+
+```{r wx_files, eval=TRUE, echo=TRUE, results='markup'}
+wx_files <- list.files(path = system.file("extdata", package = "raindancer"),
+                        pattern = ".csv", full.names = TRUE, recursive = FALSE)
+print(wx_files)
+```
+
+And let's assign table names again to simplify our code.
+
+```{r wx_tables, eval=TRUE, echo=TRUE, results='markup'}
+# Set table names
+import_table = "tblWxImportLog"
+raw_data_table = "tblWxData_raw"
+prcp_data_table = "tblWxData_PRCP"
+temp_rh_data_table = "tblWxData_TEMP_RH"
+details_table = "tblWxLoggerDetails"
+```
+
+Now let's use *export_hobo()* to write these data to the database.
+Like *export_xls()*, this function relies on RODBC package to write the data to the database and it does not return an R object.
+This function requires seven arguments and has two optional arguments:\
+1.
+**my_file** - A character string of the complete file path of your \*.csv file.\
+2.
+**my_db** - A connected database from \code{\link{RODBC}}.\
+3.
+**import_table** - A character string of the name of the import log table.\
+4.
+**raw_data_table** - A character string of the name of the raw data table.\
+5.
+**prcp_data_table** - A character string of the name of the processed precipitation data table.\
+6.
+**temp_rh_data_table** - A character string of the name of the processed temperature and relative humidity data table.\
+7.
+**details_table** - A character string of the name of the logger details table.\
+8.
+**verbose** - Optional.
+Show messages showing progress.
+Default is TRUE.
+If FALSE, messages are suppressed.\
+8.
+**view** - Optional.
+Prints data to console before writing them to the database.
+Default is TRUE.
+If FALSE, data are not printed and there is no prompt before writing data to the database.\
+
+Like before, we'll let the function print messages and suppress viewing the data.
+
+```{r export_hobo, eval=TRUE, echo=TRUE, results='markup'}
+export_hobo(wx_files[1], 
+            my_db = my_db,
+            import_table = import_table,
+            raw_data_table = raw_data_table,
+            prcp_data_table = prcp_data_table,
+            temp_rh_data_table = temp_rh_data_table,
+            details_table = details_table,
+            verbose = TRUE, view = FALSE)
+```
+
+And like before, we can improve our efficiency by using the *lapply()* function to iterate *export_hobo()* through all csv files in a folder.
+
+```{r process_wx_dir, eval=TRUE, echo=TRUE, results='markup'}
+lapply(wx_files[2:length(wx_files)], function(this_file){
+  export_hobo(this_file, 
+              my_db = my_db,
+              import_table = import_table,
+              raw_data_table = raw_data_table,
+              prcp_data_table = prcp_data_table,
+              temp_rh_data_table = temp_rh_data_table,
+              details_table = details_table,
+              view = FALSE)
+})
+```
+
+## Troubleshooting Weather Data
+
+The structure of the csv files generated from HOBOware vary wildly.
+They can have anywhere from 4 to 10 columns and the logger details are usually in two "hidden" columns following the data.
+This makes data from the temperature, relative humidity, and precipitation data difficult to read into R.
+Below are some tips to troubleshoot the csv files when they fail to read into R correctly and *export_hobo()* fails.\
+
+1.  First open the \*.csv file in a text editor and examine the data. Most of the time the data are simply invalid for some reason, it's probably noted in the Field Notes. If this is the case, move the file to the "not processed" directory and move on.\
+2.  If the data look valid, use the code below to find where a file is not reading in to R correctly. Sometimes this is fairly easy to fix in the \*.csv, other times is a real bugger.\
+
+**More hints** Files before 2020.\
+A common bug in earlier \*.csv files is when the logger name on line 13, "Launch Name", has an apostrophe in it (e.g. Devil's Garden).
+Remove the apostrophe and the file will read into R.
+
+Files 2020 and later.\
+A common bug in more recent csv files, HoboWare does not write column names for the last two columns, Details and units.
+This error reports "more columns than column names".
+Open the file and add column names to the last two columns of row two.
+The file should read into R smoothly.\
+
+```{r troubleshooting, eval=FALSE, echo=TRUE}
+#-- Isolate file and begin troubleshooting
+file_index <- 11                        # Index number of the trouble file. This number will change.
+file_list[file_index]                   # Prints name of trouble file.
+my_file <- file_list[file_index]        # Assigns file path to R object.
+raindancer::import_hobo(my_file)   # Test raindancer function for error.
+
+#-- Problems with parsing date-time
+read.table(my_file, sep = ",", skip = 1) |> # skip argument may differ
+  tibble::tibble() |>
+  dplyr::rename("DateTime" = V2) |> # Variable name (V2) may differ
+  dplyr::mutate("DateTime" = lubridate::parse_date_time(DateTime, 
+                                                        orders = "%m/%d/%y hh:mm"))
+
+#-- Problems with csv file headers
+# Play around with skip argument until csv read into R correctly
+read.csv(my_file, skip = 1)  |> tibble::tibble() 
+readr::read_csv(my_file, skip = 1, show_col_types = FALSE)  |> tibble::tibble()
+
+#-- Testing data summary functions
+raindancer::import_hobo(my_file) |> raindancer::raindance(dat)
+raindancer::import_hobo(my_file) |> raindancer::sundance(dat)
+
+raindancer::import_hobo(file_list[file_index]) |> raindancer::process_hobo()
+
+# Continue processing files in directory after an invalid file breaks the 
+#    lapply() is sorted out. 
+# After troubleshooting the file that caused export_hobo() to  crash. 
+# Change the number to the index of the next file and continue to process the 
+#    rest of the files in the directory.
+lapply(file_list[file_index:length(file_list)], function(this_file){
+  export_hobo(this_file, my_db = my_db,
+              import_table = import_table,
+              raw_data_table = raw_data_table,
+              prcp_data_table = prcp_data_table,
+              temp_rh_data_table = temp_rh_data_table,
+              details_table = details_table, 
+              view = FALSE)
+})
+```
+
+# Reporting Errors and Issues
+Please submit any problems on the Issues page of this GitHub repository, [https://github.com/scoyoc/dataprocessR/issues](https://github.com/scoyoc/dataprocessR/issues), or contact the author of the package if this happens.

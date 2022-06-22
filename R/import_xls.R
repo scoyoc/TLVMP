@@ -94,8 +94,7 @@ import_xls <- function(my_xls){
                   F = as.integer(F),
                   Key = paste(SampleYear, PlotID, Quad, SppCode, sep = ".")) |>
     dplyr::full_join(dplyr::select(raw_dat, SppCode,
-                                   tidyselect::starts_with("C"),
-                                   by = c("Key", "Key")) |>
+                                   tidyselect::starts_with("C")) |>
                        tidyr::gather("Quad", "C", "C1":"C100", na.rm = FALSE) |>
                        dplyr::mutate(SampleYear = as.integer(sample_year),
                                      PlotID = plot_id,
@@ -104,7 +103,7 @@ import_xls <- function(my_xls){
                                      C = as.integer(C),
                                      Key = paste(SampleYear, PlotID, Quad,
                                                  SppCode, sep = ".")) |>
-                       dplyr::select(Key, C)) |>
+                       dplyr::select(Key, C), by = c("Key" = "Key")) |>
     dplyr::arrange(Quad) |>
     dplyr::mutate(NAs = ifelse(is.na(F) & is.na(C), 1, 0)) |>
     dplyr::filter(NAs == 0) |>
