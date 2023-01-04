@@ -58,7 +58,7 @@ export_xls <- function(my_xls, my_db, data_table, sampling_event_table,
   if(verbose == TRUE) message(glue::glue("Processing {basename(my_xls)}"))
   #-- Process hobo file --
   dat <- import_xls(my_xls)
-  dat$file_info$Database <- basename(file.path(RODBC::sqlTables(my.db)[1] |>
+  dat$file_info$Database <- basename(file.path(RODBC::sqlTables(my_db)[1] |>
                                                  unique()))
 
   if(view == TRUE){
@@ -66,13 +66,12 @@ export_xls <- function(my_xls, my_db, data_table, sampling_event_table,
     readline(prompt = "Press [enter] to export data to database.")
   }
 
+  if(verbose == TRUE) message("- Writing import log to database")
+  export_table(my_db, my_df = dat$file_info, my_table = import_table)
+
   if(verbose == TRUE) message("- Writing data to database")
   export_table(my_db, my_df = dat$data, my_table = data_table)
 
   if(verbose == TRUE) message("- Writing sampling event to database")
   export_table(my_db, my_df = dat$sampling_event, my_table = sampling_event_table)
-
-  if(verbose == TRUE) message("- Writing import log to database")
-  export_table(my_db, my_df = dat$file_info, my_table = import_table)
-
 }
