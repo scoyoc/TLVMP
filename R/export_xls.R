@@ -58,6 +58,9 @@ export_xls <- function(my_xls, my_db, data_table, sampling_event_table,
   if(verbose == TRUE) message(glue::glue("Processing {basename(my_xls)}"))
   #-- Process hobo file --
   dat <- import_xls(my_xls)
+  dat$file_info$Database <- basename(file.path(RODBC::sqlTables(my.db)[1] |>
+                                                 unique()))
+
   if(view == TRUE){
     print(dat)
     readline(prompt = "Press [enter] to export data to database.")
