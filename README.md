@@ -6,7 +6,7 @@ This package imports the workbook files into R, restructures the data, then expo
 Onset data loggers collect temperature, relative humidity, and precipitation data that are exported to comma delimited files (*.csv) using the HOBOware application from Onset. 
 The [raindancer](https://github.com/scoyoc/raindancer) package is used to import these data into R and summarize them; this package then exports the processed data to the SEUG LTVMP database.
 
-Version: 0.2.0
+Version: 1.0.0
 
 Depends: R (>= 4.0)
 
