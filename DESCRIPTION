@@ -1,5 +1,5 @@
 Package: dataprocessR
-Title: Export Data into the SEUG LTVMP Database
+Title: Import Data into the SEUG LTVMP Database
 Version: 1.0.0
 Authors@R: 
     person(given = "Matthew",
@@ -7,7 +7,7 @@ Authors@R:
            role = c("aut", "cre"),
            email = "matthew_vanscoyoc@nps.gov",
            comment = c(ORCID = "0000-0001-6821-4476"))
-Description: This package processes data collected in the field and exports them 
+Description: This package processes data collected in the field and imports them 
     to the Southeast Utah Group (SEUG) Long-term Vegetation Monitoring Program 
     (LTVMP) database. This package imports Excel workbook files into R, 
     restructures the data, then exports them to the database. The 

@@ -1,6 +1,6 @@
 # dataprocessR
 
-This package processes plant and ground cover data collected in the field and exports them to the Southeast Utah Group (SEUG) Long-term Vegetation Monitoring Program (LTVMP) database. 
+This package processes plant and ground cover data collected in the field and imports them to the Southeast Utah Group (SEUG) Long-term Vegetation Monitoring Program (LTVMP) database. 
 Plant cover and frequency and ground cover data are collected in the field using paper datasheets, then transcribed into Excel workbooks. 
 This package imports the workbook files into R, restructures the data, then exports them to the database.
 Onset data loggers collect temperature, relative humidity, and precipitation data that are exported to comma delimited files (*.csv) using the HOBOware application from Onset. 
